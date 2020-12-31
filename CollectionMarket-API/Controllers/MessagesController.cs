@@ -28,17 +28,18 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
-        /// Get all Messages
+        /// Get all Messages between two Users
         /// </summary>
-        /// <returns>Messages</returns>
+        /// <param name="filtersDTO">Filters</param>
+        /// <returns>All Messages between two Users</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllMessages()
+        public async Task<IActionResult> GetMessages([FromBody] MessageFiltersDTO filtersDTO)
         {
             try
             {
-                var messages = await _messageService.GetAll();
+                var messages = await _messageService.GetConversation(filtersDTO);
                 return Ok(messages);
             }
             catch (Exception e)

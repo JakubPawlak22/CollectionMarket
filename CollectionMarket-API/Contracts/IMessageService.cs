@@ -8,7 +8,7 @@ namespace CollectionMarket_API.Contracts
 {
     public interface IMessageService
     {
-        Task<IList<MessageDTO>> GetAll();
+        Task<IList<MessageDTO>> GetConversation(MessageFiltersDTO filtersDTO);
         Task<Tuple<int, bool>> Create(MessageCreateDTO messageDTO);
     }
 }

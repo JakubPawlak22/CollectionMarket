@@ -22,4 +22,10 @@ namespace CollectionMarket_API.DTOs
         public string Content { get; set; }
         public DateTime Date { get; set; }
     }
+
+    public class MessageFiltersDTO
+    {
+        public string FirstUserId { get; set; }
+        public string SecondUserId { get; set; }
+    }
 }

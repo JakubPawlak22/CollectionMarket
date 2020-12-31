@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CollectionMarket_API.Data;
 using CollectionMarket_API.DTOs;
+using CollectionMarket_API.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace CollectionMarket_API.Mappings
                       string.Format("{0} {1}", x.Sender.FirstName, x.Sender.LastName)));
             CreateMap<MessageDTO, Message>();
             CreateMap<Message, MessageCreateDTO>().ReverseMap();
+            CreateMap<MessageFilters, MessageFiltersDTO>().ReverseMap();
         }
     }
 }

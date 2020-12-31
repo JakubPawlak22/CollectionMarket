@@ -19,18 +19,26 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<IList<Message>> GetAll()
         {
-            var messages = await _context.Messages.Include(x=>x.Receiver).Include(x=>x.Sender).ToListAsync();
+            var messages = await _context.Messages.Include(x => x.Receiver).Include(x => x.Sender).ToListAsync();
             return messages;
         }
 
         public async Task<IList<Message>> GetFiltered(MessageFilters filters)
         {
-            var messages = await _context.Messages.Where(x =>
-                (x.ReceiverId.Equals(filters.FirstUserId)
-                    && x.SenderId.Equals(filters.SecondUserId))
-                || (x.SenderId.Equals(filters.FirstUserId)
-                    && x.ReceiverId.Equals(filters.SecondUserId))
-            ).ToListAsync();
+            var query = _context.Messages.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filters.FirstUserId) && !string.IsNullOrEmpty(filters.SecondUserId))
+                query = query.Where(x =>
+                    (x.ReceiverId.Equals(filters.FirstUserId)
+                        && x.SenderId.Equals(filters.SecondUserId))
+                    || (x.SenderId.Equals(filters.FirstUserId)
+                        && x.ReceiverId.Equals(filters.SecondUserId)));
+
+            var messages = await query
+                .Include(x => x.Receiver)
+                .Include(x => x.Sender)
+                .OrderBy(x => x.Date)
+                .ToListAsync();
             return messages;
         }
 

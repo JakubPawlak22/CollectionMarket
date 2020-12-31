@@ -9,11 +9,12 @@
             Endpoint used to interact with Messages in database
             </summary>
         </member>
-        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetAllMessages">
+        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetMessages(CollectionMarket_API.DTOs.MessageFiltersDTO)">
             <summary>
-            Get all Messages
+            Get all Messages between two Users
             </summary>
-            <returns>Messages</returns>
+            <param name="filtersDTO">Filters</param>
+            <returns>All Messages between two Users</returns>
         </member>
         <member name="M:CollectionMarket_API.Controllers.MessagesController.Create(CollectionMarket_API.DTOs.MessageCreateDTO)">
             <summary>

@@ -68,11 +68,9 @@ namespace CollectionMarket_API.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 var result = await _messageService.Create(createDTO);
-                var messageId = result.Item1;
-                var isSuccess = result.Item2;
-                if (!isSuccess)
+                if (!result.IsSuccess)
                     return StatusCode(500, "An internal server errror was occured.");
-                return Created("Create", messageId);
+                return Created("Create", result.ObjectId);
             }
             catch (Exception e)
             {

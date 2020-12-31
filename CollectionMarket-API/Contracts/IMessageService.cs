@@ -1,4 +1,5 @@
 ﻿using CollectionMarket_API.DTOs;
+using CollectionMarket_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace CollectionMarket_API.Contracts
     public interface IMessageService
     {
         Task<IList<MessageDTO>> GetConversation(MessageFiltersDTO filtersDTO);
-        Task<Tuple<int, bool>> Create(MessageCreateDTO messageDTO);
+        Task<CreateObjectResult> Create(MessageCreateDTO messageDTO);
     }
 }

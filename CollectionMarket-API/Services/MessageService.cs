@@ -4,6 +4,7 @@ using CollectionMarket_API.Contracts.Repositories;
 using CollectionMarket_API.Data;
 using CollectionMarket_API.DTOs;
 using CollectionMarket_API.Filters;
+using CollectionMarket_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +24,15 @@ namespace CollectionMarket_API.Services
             _mapper = mapper;
         }
 
-        public async Task<Tuple<int,bool>> Create(MessageCreateDTO messageDTO)
+        public async Task<CreateObjectResult> Create(MessageCreateDTO messageDTO)
         {
             var message = _mapper.Map<Message>(messageDTO);
             var isSuccess = await _messageRepository.Create(message);
-            return new Tuple<int, bool>(message.Id, isSuccess);
+            return new CreateObjectResult
+            {
+                ObjectId = message.Id,
+                IsSuccess = isSuccess
+            };
         }
 
         public async Task<IList<MessageDTO>> GetConversation(MessageFiltersDTO filtersDTO)

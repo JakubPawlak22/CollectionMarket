@@ -4,5 +4,30 @@
         <name>CollectionMarket-API</name>
     </assembly>
     <members>
+        <member name="T:CollectionMarket_API.Controllers.MessagesController">
+            <summary>
+            Endpoint used to interact with Messages in database
+            </summary>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetAllMessages">
+            <summary>
+            Get all Messages
+            </summary>
+            <returns>Messages</returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.MessagesController.Create(CollectionMarket_API.DTOs.MessageCreateDTO)">
+            <summary>
+            Create a Message
+            </summary>
+            <param name="createDTO"></param>
+            <returns>A Message's ID</returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.Login(CollectionMarket_API.DTOs.UserLoginDTO)">
+            <summary>
+            Login
+            </summary>
+            <param name="loginDTO">Username and Password</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

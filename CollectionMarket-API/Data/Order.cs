@@ -10,7 +10,7 @@ namespace CollectionMarket_API.Data
     public class Order
     {
         public int Id { get; set; }
-        public int BuyerId { get; set; }
+        public string BuyerId { get; set; }
         public string City { get; set; }
         public string PostCode { get; set; }
         public string Address { get; set; }

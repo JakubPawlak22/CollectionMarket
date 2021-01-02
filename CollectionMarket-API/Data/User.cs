@@ -14,5 +14,7 @@ namespace CollectionMarket_API.Data
         public string City { get; set; }
         public string PostCode { get; set; }
         public string Address { get; set; }
+
+        public virtual IList<SaleOffer> SaleOffers { get; set; }
     }
 }

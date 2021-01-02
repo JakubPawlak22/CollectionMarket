@@ -33,6 +33,7 @@ namespace CollectionMarket_API.Controllers
         /// <param name="filtersDTO">Filters</param>
         /// <returns>All Messages between two Users</returns>
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetMessages([FromBody] MessageFiltersDTO filtersDTO)
@@ -54,7 +55,7 @@ namespace CollectionMarket_API.Controllers
         /// <param name="createDTO"></param>
         /// <returns>A Message's ID</returns>
         [HttpPost]
-        [Authorize(Roles = "Administrator, Client")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

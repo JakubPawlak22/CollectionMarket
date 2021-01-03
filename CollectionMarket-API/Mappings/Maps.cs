@@ -21,6 +21,8 @@ namespace CollectionMarket_API.Mappings
             CreateMap<MessageDTO, Message>();
             CreateMap<Message, MessageCreateDTO>().ReverseMap();
             CreateMap<MessageFilters, MessageFiltersDTO>().ReverseMap();
+            CreateMap<UserRegisterDTO, User>()
+                .ForMember(x => x.Money, opt => opt.MapFrom(x => 0));
         }
     }
 }

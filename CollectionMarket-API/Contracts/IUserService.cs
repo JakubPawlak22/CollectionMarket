@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CollectionMarket_API.DTOs;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace CollectionMarket_API.Contracts
     {
         Task<SignInResult> SignIn(string username, string password);
         Task<string> GenerateJSONWebToken(string username);
+        Task<bool> Register(UserRegisterDTO userRegisterDTO);
     }
 }

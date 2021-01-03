@@ -45,6 +45,7 @@ namespace CollectionMarket_API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogException(e);
                 return StatusCode(500);
             }
         }
@@ -75,6 +76,7 @@ namespace CollectionMarket_API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogException(e);
                 return StatusCode(500, "An internal server errror was occured.");
             }
         }

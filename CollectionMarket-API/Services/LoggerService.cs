@@ -21,6 +21,11 @@ namespace CollectionMarket_API.Services
             _logger.Error(message);
         }
 
+        public void LogException(Exception e)
+        {
+            LogError($"{e.Message} - {e.InnerException}");
+        }
+
         public void LogInfo(string message)
         {
             _logger.Info(message);

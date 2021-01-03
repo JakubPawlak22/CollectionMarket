@@ -17,10 +17,13 @@ namespace CollectionMarket_API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILoggerService _logger;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService,
+            ILoggerService logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -28,6 +31,7 @@ namespace CollectionMarket_API.Controllers
         /// </summary>
         /// <param name="loginDTO">Username and Password</param>
         /// <returns></returns>
+        [Route("login")]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO loginDTO)
@@ -44,6 +48,35 @@ namespace CollectionMarket_API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// User Registration 
+        /// </summary>
+        /// <param name="userRegisterDTO">Account informations</param>
+        /// <returns></returns>
+        [Route("register")]
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody]UserRegisterDTO userRegisterDTO)
+        {
+            try
+            {
+                if (userRegisterDTO == null)
+                    return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                var isSuccess = await _userService.Register(userRegisterDTO);
+                if(!isSuccess)
+                    return StatusCode(500);
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
                 return StatusCode(500);
             }
         }

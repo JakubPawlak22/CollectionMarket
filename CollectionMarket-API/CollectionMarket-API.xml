@@ -30,5 +30,12 @@
             <param name="loginDTO">Username and Password</param>
             <returns></returns>
         </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.Register(CollectionMarket_API.DTOs.UserRegisterDTO)">
+            <summary>
+            User Registration 
+            </summary>
+            <param name="userRegisterDTO">Account informations</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

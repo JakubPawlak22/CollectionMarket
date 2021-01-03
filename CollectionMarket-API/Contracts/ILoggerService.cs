@@ -11,5 +11,6 @@ namespace CollectionMarket_API.Contracts
         void LogWarn(string message);
         void LogDebug(string message);
         void LogError(string message);
+        void LogException(Exception e);
     }
 }

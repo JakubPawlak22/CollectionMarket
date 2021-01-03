@@ -1,5 +1,7 @@
-﻿using CollectionMarket_API.Contracts;
+﻿using AutoMapper;
+using CollectionMarket_API.Contracts;
 using CollectionMarket_API.Data;
+using CollectionMarket_API.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -18,14 +20,17 @@ namespace CollectionMarket_API.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
         public UserService(SignInManager<User> signInManager, 
             UserManager<User> userManager,
-            IConfiguration config)
+            IConfiguration config,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _config = config;
+            _mapper = mapper;
         }
 
         public async Task<SignInResult> SignIn(string username, string password)
@@ -57,6 +62,13 @@ namespace CollectionMarket_API.Services
                 signingCredentials:credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<bool> Register(UserRegisterDTO userRegisterDTO)
+        {
+            var user = _mapper.Map<User>(userRegisterDTO);
+            var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
+            return result.Succeeded;
         }
     }
 }

@@ -8,7 +8,14 @@ namespace CollectionMarket_UI.Models
 {
     public class LoginModel
     {
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "Username")]
         public string Username { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
     }
     public class RegistrationModel

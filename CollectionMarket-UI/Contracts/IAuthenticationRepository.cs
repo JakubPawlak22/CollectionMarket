@@ -9,5 +9,7 @@ namespace CollectionMarket_UI.Contracts
     public interface IAuthenticationRepository
     {
         public Task<bool> Register(RegistrationModel model);
+        public Task<bool> Login(LoginModel model);
+        public Task Logout();
     }
 }

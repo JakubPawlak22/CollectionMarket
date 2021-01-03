@@ -1,0 +1,81 @@
+﻿@page "/Register"
+@using Models;
+@using Contracts
+
+@inject IAuthenticationRepository _authenticationRepo;
+@inject NavigationManager _naviManager;
+
+<div class="card">
+    <h3 class="card-title">Register</h3>
+    @if (!isSuccess)
+    {
+        <div class="alert alert-danger">
+            <p>Something went wrong</p>
+        </div>
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="username">Username</label>
+                <InputText Id="username" class="form-control" @bind-Value="Model.Username" />
+                <ValidationMessage For="@(()=>Model.Username)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" class="form-control" @bind-Value="Model.Password" />
+                <ValidationMessage For="@(()=>Model.Password)" />
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password</label>
+                <InputText Id="confirm-password" type="password" class="form-control" @bind-Value="Model.ConfirmPassword" />
+                <ValidationMessage For="@(()=>Model.ConfirmPassword)" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <InputText Id="email" class="form-control" @bind-Value="Model.Email" />
+                <ValidationMessage For="@(()=>Model.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="first-name">First Name</label>
+                <InputText Id="first-name" class="form-control" @bind-Value="Model.FirstName" />
+                <ValidationMessage For="@(()=>Model.FirstName)" />
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <InputText Id="last-name" class="form-control" @bind-Value="Model.LastName" />
+                <ValidationMessage For="@(()=>Model.LastName)" />
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <InputText Id="city" class="form-control" @bind-Value="Model.City" />
+                <ValidationMessage For="@(()=>Model.City)" />
+            </div>
+            <div class="form-group">
+                <label for="postcode">Postcode</label>
+                <InputText Id="postcode" class="form-control" @bind-Value="Model.PostCode" />
+                <ValidationMessage For="@(()=>Model.PostCode)" />
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <InputText Id="address" class="form-control" @bind-Value="Model.Address" />
+                <ValidationMessage For="@(()=>Model.Address)" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    RegistrationModel Model = new RegistrationModel();
+    bool isSuccess = true;
+    private async Task HandleRegistration()
+    {
+        isSuccess = await _authenticationRepo.Register(Model);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/");
+        }
+    }
+}

@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionMarket-API", "CollectionMarket-API\CollectionMarket-API.csproj", "{82D44BD9-6B38-4F2D-93FF-05A76B6F28AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{72708384-8706-4BEE-911A-675CE3217E98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{72708384-8706-4BEE-911A-675CE3217E98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionMarket-UI", "CollectionMarket-UI\CollectionMarket-UI.csproj", "{F82E0BDE-8A33-454B-B12B-1349BCA19875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionMarket-UI", "CollectionMarket-UI\CollectionMarket-UI.csproj", "{F82E0BDE-8A33-454B-B12B-1349BCA19875}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

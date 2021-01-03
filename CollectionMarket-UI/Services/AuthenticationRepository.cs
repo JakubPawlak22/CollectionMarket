@@ -56,7 +56,7 @@ namespace CollectionMarket_UI.Services
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
-            await ((ApiAuthenticationStateProvider)_authenticationStateProvider).LogOut();
+            ((ApiAuthenticationStateProvider)_authenticationStateProvider).LogOut();
         }
 
         public async Task<bool> Register(RegistrationModel model)

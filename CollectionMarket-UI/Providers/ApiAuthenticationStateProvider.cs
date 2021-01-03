@@ -55,7 +55,7 @@ namespace CollectionMarket_UI.Providers
             NotifyAuthenticationStateChanged(authState);
         }
 
-        public async Task LogOut()
+        public void LogOut()
         {
             var nobody =new ClaimsPrincipal(new ClaimsIdentity());
             var authState = Task.FromResult(new AuthenticationState(nobody));

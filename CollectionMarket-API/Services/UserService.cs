@@ -68,6 +68,7 @@ namespace CollectionMarket_API.Services
         {
             var user = _mapper.Map<User>(userRegisterDTO);
             var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
+            await _userManager.AddToRoleAsync(user, "Client");
             return result.Succeeded;
         }
     }

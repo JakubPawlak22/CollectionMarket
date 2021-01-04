@@ -10,7 +10,7 @@
     @if (!isSuccess)
     {
         <div class="alert alert-danger">
-            <p>Something went wrong</p>
+            <p>Something went wrong.</p>
         </div>
     }
     <div class="card-body">
@@ -75,7 +75,7 @@
         isSuccess = await _authenticationRepo.Register(Model);
         if (isSuccess)
         {
-            _naviManager.NavigateTo("/");
+            _naviManager.NavigateTo("/login");
         }
     }
 }

@@ -1,8 +1,10 @@
 using Blazored.LocalStorage;
 using CollectionMarket_UI.Contracts;
+using CollectionMarket_UI.Providers;
 using CollectionMarket_UI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -33,6 +35,9 @@ namespace CollectionMarket_UI
             services.AddServerSideBlazor();
             services.AddBlazoredLocalStorage();
             services.AddHttpClient();
+            services.AddScoped<ApiAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(x =>
+                x.GetRequiredService<ApiAuthenticationStateProvider>());
             services.AddScoped<JwtSecurityTokenHandler>();
             services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
         }

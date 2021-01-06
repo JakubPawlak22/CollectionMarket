@@ -1,9 +1,11 @@
-﻿using CollectionMarket_UI.Contracts;
+﻿using Blazored.LocalStorage;
+using CollectionMarket_UI.Contracts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,20 +13,28 @@ namespace CollectionMarket_UI.Services
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
+        private readonly ILocalStorageService _localStorage;
         private readonly IHttpClientFactory _clientFactory;
-        public BaseRepository(IHttpClientFactory clientFactory)
+        private readonly IHttpRequestMessageSender _sender;
+        private HttpRequestMessageDirector _director;
+
+        public BaseRepository(IHttpClientFactory clientFactory,
+            ILocalStorageService localStorage,
+            IHttpRequestMessageSender sender)
         {
             _clientFactory = clientFactory;
+            _localStorage = localStorage;
+            _sender = sender;
+            _director = new HttpRequestMessageDirector();
+            _director.Builder = new HttpRequestMessageBuilder();
         }
 
         public async Task<bool> Create(string url, T obj)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
             if (obj == null)
                 return false;
-            request.Content = new StringContent(JsonConvert.SerializeObject(obj));
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Post, url, obj);
+            HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
                 return true;
@@ -36,9 +46,8 @@ namespace CollectionMarket_UI.Services
         {
             if (id < 1)
                 return false;
-            var request = new HttpRequestMessage(HttpMethod.Delete, url + id);
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequest(HttpMethod.Delete, url + id);
+            HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
                 return true;
@@ -50,9 +59,8 @@ namespace CollectionMarket_UI.Services
         {
             if (id < 1)
                 return null;
-            var request = new HttpRequestMessage(HttpMethod.Get, url + id);
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequest(HttpMethod.Get, url + id);
+            HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -63,9 +71,8 @@ namespace CollectionMarket_UI.Services
 
         public async Task<IList<T>> Get(string url)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequest(HttpMethod.Get, url);
+            HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = await response.Content.ReadAsStringAsync();
@@ -76,12 +83,10 @@ namespace CollectionMarket_UI.Services
 
         public async Task<bool> Update(string url, T obj)
         {
-            var request = new HttpRequestMessage(HttpMethod.Put, url);
             if (obj == null)
                 return false;
-            request.Content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequest(HttpMethod.Put, url);
+            HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
                 return true;

@@ -40,6 +40,7 @@ namespace CollectionMarket_UI
                 x.GetRequiredService<ApiAuthenticationStateProvider>());
             services.AddScoped<JwtSecurityTokenHandler>();
             services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddTransient<IHttpRequestMessageSender, RequestWithBearerTokenSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,21 +20,26 @@ namespace CollectionMarket_UI.Services
         private readonly ILocalStorageService _localStorage;
         private readonly IHttpClientFactory _clientFactory;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private readonly IHttpRequestMessageSender _sender;
+        private HttpRequestMessageDirector _director;
 
         public AuthenticationRepository(IHttpClientFactory clientFactory,
             ILocalStorageService localStorage,
-            AuthenticationStateProvider authenticationStateProvider)
+            AuthenticationStateProvider authenticationStateProvider,
+            IHttpRequestMessageSender sender)
         {
             _clientFactory = clientFactory;
             _localStorage = localStorage;
             _authenticationStateProvider = authenticationStateProvider;
+            _sender = sender;
+            _director = new HttpRequestMessageDirector();
+            _director.Builder = new HttpRequestMessageBuilder();
         }
 
         public async Task<bool> Login(LoginModel model)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, Endpoints.LoginEndpoint);
-            request.Content = new StringContent(JsonConvert.SerializeObject(model),
-                Encoding.UTF8, "application/json");
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Post,
+                Endpoints.LoginEndpoint, model);
             var client = _clientFactory.CreateClient();
             HttpResponseMessage response = await client.SendAsync(request);
             if (!response.IsSuccessStatusCode)
@@ -61,11 +66,9 @@ namespace CollectionMarket_UI.Services
 
         public async Task<bool> Register(RegistrationModel model)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, Endpoints.RegisterEndpoint);
-            request.Content = new StringContent(JsonConvert.SerializeObject(model), 
-                Encoding.UTF8, "application/json");
-            var client = _clientFactory.CreateClient();
-            HttpResponseMessage response = await client.SendAsync(request);
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Post,
+                Endpoints.RegisterEndpoint, model);
+            HttpResponseMessage response = await _sender.Send(request);
             return response.IsSuccessStatusCode;
         }
     }

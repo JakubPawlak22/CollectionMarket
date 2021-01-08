@@ -11,6 +11,7 @@ namespace CollectionMarket_API.Data
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int DataType { get; set; }
 
         public virtual IList<AttributeValue> AttributeValues { get; set; }
         public virtual IList<CategoryAttributes> CategoryAttributes { get; set; }

@@ -1,0 +1,48 @@
+﻿@page "/attributes/create"
+@inject IAttributeRepository _attributeRepo;
+@inject NavigationManager _naviManager;
+@using Common.Enums
+
+<div class="card">
+    <h3 class="card-title">Create Attribute</h3>
+    @if (!isSuccess)
+    {
+        <ErrorMessage Message="Something went wrong." />
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleCreateAttribute">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="name">Name</label>
+                <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
+                <ValidationMessage For="@(()=>Model.Name)" />
+            </div>
+            <div class="form-group">
+                <label for="datatype">DataType</label>
+                <select @bind="Model.DataType" class="form-control" id="datatype">
+                    <option value="">-- Select DataType --</option>
+                    @foreach (DataTypes type in (DataTypes[]) Enum.GetValues(typeof(DataTypes)))
+                    {
+
+                    <option value="@type">@type</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private AttributeModel Model = new AttributeModel();
+    bool isSuccess = true;
+    private async Task HandleCreateAttribute()
+    {
+        isSuccess = await _attributeRepo.Create(Endpoints.AttributesEndpoint, Model);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/attributes");
+        }
+    }
+}

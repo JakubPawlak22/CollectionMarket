@@ -1,0 +1,14 @@
+﻿@page "/attributes/delete/{Id}"
+@inject IAttributeRepository _attributeRepo;
+@inject NavigationManager _naviManager;
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        int id = Convert.ToInt32(Id);
+        await _attributeRepo.Delete(Endpoints.AttributesEndpoint, id);
+        _naviManager.NavigateTo("/attributes");
+    }
+}

@@ -1,22 +1,22 @@
-﻿@page "/categories"
-@inject ICategoryRepository _categoryRepo;
+﻿@page "/attributes"
+@inject IAttributeRepository _attributeRepo;
 
 
-<h3>Categories</h3>
+<h3>Attributes</h3>
 
 <AuthorizeView Roles="Administrator">
-    <a href="/categories/create" class="btn btn-primary">
-        <span class="oi oi-plus">Add category</span>
+    <a href="/attributes/create" class="btn btn-primary">
+        <span class="oi oi-plus">Add attribute</span>
     </a>
 </AuthorizeView>
 
-@if (!isAnyCategory)
+@if (!isAnyAttribute)
 {
-    <LoadingMessage Message="There is no Category." />
+    <LoadingMessage Message="There is no Attribute." />
 }
 else if (Model == null)
 {
-    <LoadingMessage Message="Loading Categories informations." />
+    <LoadingMessage Message="Loading Attributes informations." />
 }
 else
 {
@@ -24,25 +24,29 @@ else
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Data Type</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var category in Model)
+            @foreach (var attributeModel in Model)
             {
                 <tr>
                     <td>
-                        @category.Name
+                        @attributeModel.Name
                     </td>
                     <td>
-                        <a href="/categories/@category.Id" class="btn btn-primary">
+                        @attributeModel.DataType
+                    </td>
+                    <td>
+                        <a href="/attributes/@attributeModel.Id" class="btn btn-primary">
                             <span class="oi oi-arrow-right">Details</span>
                         </a>
                         <AuthorizeView Roles="Administrator">
-                            <a href="/categories/edit/@category.Id" class="btn btn-secondary">
+                            <a href="/attributes/edit/@attributeModel.Id" class="btn btn-secondary">
                                 <span class="oi oi-arrow-right">Edit</span>
                             </a>
-                            <a href="/categories/delete/@category.Id" class="btn btn-danger">
+                            <a href="/attributes/delete/@attributeModel.Id" class="btn btn-danger">
                                 <span class="oi oi-arrow-right">Delete</span>
                             </a>
                         </AuthorizeView>
@@ -54,14 +58,14 @@ else
 }
 
 @code {
-    private IList<CategoryModel> Model;
-    private bool isAnyCategory = true;
+    private IList<AttributeModel> Model;
+    private bool isAnyAttribute = true;
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Model = await _categoryRepo.Get(Endpoints.CategoriesEndpoint);
-            isAnyCategory = (Model != null && Model.Count > 0);
+            Model = await _attributeRepo.Get(Endpoints.AttributesEndpoint);
+            isAnyAttribute = (Model != null && Model.Count > 0);
             this.StateHasChanged();
         }
     }

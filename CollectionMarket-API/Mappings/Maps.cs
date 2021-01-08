@@ -28,6 +28,10 @@ namespace CollectionMarket_API.Mappings
             CreateMap<Category, CategoryCreateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>().ReverseMap();
             CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
+
+            CreateMap<Data.Attribute, AttributeCreateDTO>().ReverseMap();
+            CreateMap<Data.Attribute, AttributeDTO>().ReverseMap();
+            CreateMap<Data.Attribute, AttributeUpdateDTO>().ReverseMap();
         }
     }
 }

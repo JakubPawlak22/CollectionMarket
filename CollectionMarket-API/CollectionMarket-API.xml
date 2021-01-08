@@ -4,6 +4,41 @@
         <name>CollectionMarket-API</name>
     </assembly>
     <members>
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.GetAttributes">
+            <summary>
+            Get all Attributes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.GetAttribute(System.Int32)">
+            <summary>
+            Gets Attribute by id
+            </summary>
+            <param name="id">Attribute's ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.Create(CollectionMarket_API.DTOs.AttributeCreateDTO)">
+            <summary>
+            Creates new Attribute
+            </summary>
+            <param name="attribute">Attribute's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.Update(System.Int32,CollectionMarket_API.DTOs.AttributeUpdateDTO)">
+            <summary>
+            Updates Attribute
+            </summary>
+            <param name="id">Attribute's ID</param>
+            <param name="attribute">Attribute's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.Delete(System.Int32)">
+            <summary>
+            Removes Attribute by id
+            </summary>
+            <param name="id">Attribute's ID</param>
+            <returns></returns>
+        </member>
         <member name="T:CollectionMarket_API.Controllers.CategoriesController">
             <summary>
             Interacts with Category table in database

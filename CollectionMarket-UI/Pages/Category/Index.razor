@@ -1,0 +1,66 @@
+﻿@page "/categories"
+@inject ICategoryRepository _categoryRepo;
+
+
+<h3>Categories</h3>
+
+<a href="/categories/create" class="btn btn-primary">
+    <span class="oi oi-plus">Add category</span>
+</a>
+
+@if (!isAnyCategory)
+{
+    <LoadingMessage Message="There is no Category." />
+}
+else if (Model == null)
+{
+    <LoadingMessage Message="Loading Categories informations." />
+}
+else
+{
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>
+                        @category.Name;
+                    </td>
+                    <td>
+                        <a href="/categories/@category.Id" class="btn btn-primary">
+                            <span class="oi oi-arrow-right">Details</span>
+                        </a>
+                        <AuthorizeView Roles="Administrator">
+                            <a href="/categories/edit/@category.Id" class="btn btn-secondary">
+                                <span class="oi oi-arrow-right">Edit</span>
+                            </a>
+                            <a href="/categories/delete/@category.Id" class="btn btn-danger">
+                                <span class="oi oi-arrow-right">Delete</span>
+                            </a>
+                        </AuthorizeView>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<CategoryModel> Model;
+    private bool isAnyCategory = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model = await _categoryRepo.Get(Endpoints.CategoriesEndpoint);
+            isAnyCategory = (Model != null && Model.Count > 0);
+            this.StateHasChanged();
+        }
+    }
+}

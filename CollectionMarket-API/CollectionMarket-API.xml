@@ -4,6 +4,46 @@
         <name>CollectionMarket-API</name>
     </assembly>
     <members>
+        <member name="T:CollectionMarket_API.Controllers.CategoriesController">
+            <summary>
+            Interacts with Category table in database
+            </summary>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.CategoriesController.GetCategories">
+            <summary>
+            Get all Categories
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.CategoriesController.GetCategory(System.Int32)">
+            <summary>
+            Gets Category by id
+            </summary>
+            <param name="id">Category's ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.CategoriesController.Create(CollectionMarket_API.DTOs.CategoryCreateDTO)">
+            <summary>
+            Creates new Category
+            </summary>
+            <param name="category">Category's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.CategoriesController.Update(System.Int32,CollectionMarket_API.DTOs.CategoryUpdateDTO)">
+            <summary>
+            Updates Category
+            </summary>
+            <param name="id">Category's ID</param>
+            <param name="category">Category's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.CategoriesController.Delete(System.Int32)">
+            <summary>
+            Removes Category by id
+            </summary>
+            <param name="id">Category's ID</param>
+            <returns></returns>
+        </member>
         <member name="T:CollectionMarket_API.Controllers.MessagesController">
             <summary>
             Endpoint used to interact with Messages in database

@@ -1,0 +1,35 @@
+﻿@page "/categories/create"
+@inject ICategoryRepository _categoryRepo;
+@inject NavigationManager _naviManager;
+<div class="card">
+    <h3 class="card-title">Create Category</h3>
+    @if (!isSuccess)
+    {
+        <ErrorMessage Message="Something went wrong." />
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleCreateCategory">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="name">Name</label>
+                <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
+                <ValidationMessage For="@(()=>Model.Name)" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private CategoryModel Model = new CategoryModel();
+    bool isSuccess = true;
+    private async Task HandleCreateCategory()
+    {
+        isSuccess = await _categoryRepo.Create(Endpoints.CategoriesEndpoint, Model);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/categories");
+        }
+    }
+}

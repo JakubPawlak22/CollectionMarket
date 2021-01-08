@@ -94,6 +94,8 @@ namespace CollectionMarket_API
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddControllers();
         }

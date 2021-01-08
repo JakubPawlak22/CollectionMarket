@@ -1,0 +1,56 @@
+﻿@page "/categories/edit/{Id}"
+@inject ICategoryRepository _categoryRepo;
+@inject NavigationManager _naviManager;
+
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading Category informations" />
+}
+else
+{
+    <div class="card">
+        <h3 class="card-title">Edit Category</h3>
+        @if (!isSuccess)
+        {
+            <ErrorMessage Message="Something went wrong." />
+        }
+        <div class="card-body">
+            <EditForm Model="Model" OnValidSubmit="HandleEditCategory">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
+                    <ValidationMessage For="@(()=>Model.Name)" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {[Parameter]
+    public string Id { get; set; }
+
+    private CategoryModel Model = new CategoryModel();
+    bool isSuccess = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            int id = Convert.ToInt32(Id);
+            Model = await _categoryRepo.Get(Endpoints.CategoriesEndpoint, id);
+            this.StateHasChanged();
+        }
+    }
+
+    private async Task HandleEditCategory()
+    {
+        int id = Convert.ToInt32(Id);
+        isSuccess = await _categoryRepo.Update(Endpoints.CategoriesEndpoint, Model, id);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/categories/");
+        }
+    }
+}

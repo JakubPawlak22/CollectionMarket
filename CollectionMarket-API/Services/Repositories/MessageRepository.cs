@@ -71,5 +71,11 @@ namespace CollectionMarket_API.Services.Repositories
             var changes = await _context.SaveChangesAsync();
             return changes > 0;
         }
+
+        public async Task<bool> Exists(int id)
+        {
+            var message = await _context.Messages.FindAsync(id);
+            return message != null;
+        }
     }
 }

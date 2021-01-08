@@ -1,6 +1,4 @@
 ﻿@page "/login"
-@using Models;
-@using Contracts
 
 @inject IAuthenticationRepository _authenticationRepo;
 @inject NavigationManager _naviManager;
@@ -8,9 +6,7 @@
     <h3 class="card-title">Login</h3>
     @if (!isSuccess)
     {
-        <div class="alert alert-danger">
-            <p>Something went wrong.</p>
-        </div>
+        <ErrorMessage Message="Something went wrong." />
     }
     <div class="card-body">
         <EditForm Model="Model" OnValidSubmit="HandleLogin">

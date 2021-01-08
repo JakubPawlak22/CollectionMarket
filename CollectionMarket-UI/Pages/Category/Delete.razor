@@ -1,0 +1,14 @@
+﻿@page "/categories/delete/{Id}"
+@inject ICategoryRepository _categoryRepo;
+@inject NavigationManager _naviManager;
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        int id = Convert.ToInt32(Id);
+        await _categoryRepo.Delete(Endpoints.CategoriesEndpoint, id);
+        _naviManager.NavigateTo("/categories");
+    }
+}

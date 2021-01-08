@@ -81,11 +81,11 @@ namespace CollectionMarket_UI.Services
             return null;
         }
 
-        public async Task<bool> Update(string url, T obj)
+        public async Task<bool> Update(string url, T obj, int id)
         {
             if (obj == null)
                 return false;
-            var request = _director.CreateRequest(HttpMethod.Put, url);
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Put, url + id, obj);
             HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {

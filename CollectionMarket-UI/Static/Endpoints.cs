@@ -9,8 +9,9 @@ namespace CollectionMarket_UI.Static
     {
         public static string BaseUrl = "https://localhost:44342/";
         public static string UsersEndpoint = $"{BaseUrl}api/users/";
-        public static string RegisterEndpoint = $"{BaseUrl}api/users/register/";
-        public static string LoginEndpoint = $"{BaseUrl}api/users/login/";
+        public static string RegisterEndpoint = $"{UsersEndpoint}register / ";
+        public static string LoginEndpoint = $"{UsersEndpoint}login/";
         public static string MessagesEndpoint = $"{BaseUrl}api/messages/";
+        public static string CategoriesEndpoint = $"{BaseUrl}api/categories/";
     }
 }

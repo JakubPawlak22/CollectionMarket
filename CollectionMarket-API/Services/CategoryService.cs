@@ -26,6 +26,18 @@ namespace CollectionMarket_API.Services
         public async Task<CreateObjectResult> Create(CategoryCreateDTO categoryDTO)
         {
             var category = _mapper.Map<Category>(categoryDTO);
+            category.CategoryAttributes = new List<CategoryAttributes>();
+            var attributeIds = categoryDTO.Attributes
+                .Select(x => x.Id)
+                .Distinct();
+            foreach (var attributeId in attributeIds)
+            {
+                category.CategoryAttributes.Add(new CategoryAttributes
+                {
+                    Category = category,
+                    AttributeId = attributeId
+                });
+            }
             var isSuccess = await _categoryRepository.Create(category);
             return new CreateObjectResult
             {
@@ -64,6 +76,18 @@ namespace CollectionMarket_API.Services
         public async Task<bool> Update(CategoryUpdateDTO categoryDTO)
         {
             var category = _mapper.Map<Category>(categoryDTO);
+            category.CategoryAttributes = new List<CategoryAttributes>();
+            var attributeIds = categoryDTO.Attributes
+                .Select(x => x.Id)
+                .Distinct();
+            foreach (var attributeId in attributeIds)
+            {
+                category.CategoryAttributes.Add(new CategoryAttributes
+                {
+                    Category = category,
+                    AttributeId = attributeId
+                });
+            }
             var isSuccess = await _categoryRepository.Update(category);
             return isSuccess;
         }

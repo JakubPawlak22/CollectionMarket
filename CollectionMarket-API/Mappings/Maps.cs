@@ -26,7 +26,11 @@ namespace CollectionMarket_API.Mappings
                 .ForMember(x => x.Money, opt => opt.MapFrom(x => 0));
 
             CreateMap<Category, CategoryCreateDTO>().ReverseMap();
-            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>()
+                .ForMember(x => x.Attributes,
+                    opt => opt.MapFrom(x => x.CategoryAttributes.Select(att => att.Attribute)));
+
+            CreateMap<CategoryDTO, Category>();
             CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
 
             CreateMap<Data.Attribute, AttributeCreateDTO>().ReverseMap();

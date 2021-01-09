@@ -11,7 +11,7 @@ namespace CollectionMarket_API.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DataTypes DataType { get; set; }
+        public DataTypes? DataType { get; set; }
     }
     public class AttributeCreateDTO
     {
@@ -31,5 +31,10 @@ namespace CollectionMarket_API.DTOs
 
         [Required]
         public DataTypes DataType { get; set; }
+    }
+    public class AttributeIdDTO
+    {
+        [Required]
+        public int Id { get; set; }
     }
 }

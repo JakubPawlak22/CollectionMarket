@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CollectionMarket_API.Services.Repositories
 {
-    public class CategoryRepository: ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
         public CategoryRepository(ApplicationDbContext context)
@@ -24,7 +24,10 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<Category> GetById(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Categories
+                .Include(x => x.CategoryAttributes)
+                .ThenInclude(x=>x.Attribute)
+                .SingleOrDefaultAsync(x=>x.Id==id);
             return category;
         }
 
@@ -36,7 +39,25 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<bool> Update(Category entity)
         {
-            _context.Update(entity);
+            var category = await _context.Categories
+                .Include(x => x.CategoryAttributes)
+                .SingleOrDefaultAsync(x => x.Id == entity.Id);
+            _context.Entry(category).CurrentValues.SetValues(entity);
+            var attributeMappings = category.CategoryAttributes.ToList();
+            foreach (var mapping in attributeMappings)
+            {
+                var contact = entity.CategoryAttributes
+                    .FirstOrDefault(x => x.AttributeId == mapping.AttributeId);
+                if (contact == null)
+                    _context.Remove(mapping);
+            }
+            foreach (var mapping in entity.CategoryAttributes)
+            {
+                if (attributeMappings.All(i => i.AttributeId != mapping.AttributeId))
+                {
+                    category.CategoryAttributes.Add(mapping);
+                }
+            }
             return await Save();
         }
 

@@ -1,7 +1,9 @@
 using Blazored.LocalStorage;
 using CollectionMarket_UI.Contracts;
+using CollectionMarket_UI.Contracts.ModelFactory;
 using CollectionMarket_UI.Providers;
 using CollectionMarket_UI.Services;
+using CollectionMarket_UI.Services.ModelFactory;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -43,6 +45,8 @@ namespace CollectionMarket_UI
             services.AddTransient<IHttpRequestMessageSender, RequestWithBearerTokenSender>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IAttributeRepository, AttributeRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

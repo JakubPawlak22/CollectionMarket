@@ -17,4 +17,10 @@ namespace CollectionMarket_UI.Models
         [Required]
         public DataTypes? DataType { get; set; }
     }
+
+    public class AttributeIdModel
+    {
+        [Required]
+        public int? Id { get; set; }
+    }
 }

@@ -8,16 +8,28 @@
 }
 else
 {
+    <h3>Category @Model.Name</h3>
+    <h2>Attributes</h2>
     <table class="table table-dark">
-
-        <tr>
-            <td>
-                Name
-            </td>
-            <td>
-                @Model.Name
-            </td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Data Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attr in Model.Attributes)
+            {
+            <tr>
+                <td>
+                    @attr.Name
+                </td>
+                <td>
+                    @attr.DataType
+                </td>
+            </tr>
+            }
+        </tbody>
     </table>
 }
 

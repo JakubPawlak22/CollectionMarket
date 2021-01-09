@@ -10,11 +10,15 @@ namespace CollectionMarket_API.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
+
+        public IList<AttributeDTO> Attributes { get; set; }
     }
     public class CategoryCreateDTO
     {
         [Required]
         public string Name { get; set; }
+
+        public IList<AttributeIdDTO> Attributes { get; set; }
     }
     public class CategoryUpdateDTO
     {
@@ -22,5 +26,7 @@ namespace CollectionMarket_API.DTOs
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+
+        public IList<AttributeIdDTO> Attributes { get; set; }
     }
 }

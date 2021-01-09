@@ -1,5 +1,7 @@
 ﻿@page "/categories/edit/{Id}"
 @inject ICategoryRepository _categoryRepo;
+@inject ICategoryModelFactory _categoryModelFactory;
+@inject IAttributeRepository _attributeRepo;
 @inject NavigationManager _naviManager;
 
 @if (Model == null)
@@ -23,6 +25,28 @@ else
                     <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
                     <ValidationMessage For="@(()=>Model.Name)" />
                 </div>
+                <div class="card-body">
+                    <h2>Attributes</h2>
+                    @foreach (var attributeId in Model.Attributes)
+                    {
+                        <div class="form-group">
+                            <select @bind="@attributeId.Id" class="form-control" id="attribute">
+                                <option value="">-- Select Attribute --</option>
+                                @if (Attributes != null)
+                                {
+                                    foreach (var att in Attributes)
+                                    {
+                                        <option value="@att.Id">@att.Name (@att.DataType)</option>
+                                    }
+                                }
+                            </select>
+                            <button type="button" class=" btn btn-danger" @onclick="()=>HandleRemoveAttribute(attributeId)">
+                                Remove
+                            </button>
+                        </div>
+                    }
+                    <button type="button" class="btn btn-secondary" @onclick="HandleAddAttribute">Add attribute</button>
+                </div>
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </EditForm>
         </div>
@@ -32,14 +56,17 @@ else
 @code {[Parameter]
     public string Id { get; set; }
 
-    private CategoryModel Model = new CategoryModel();
+    private CategoryUpdateModel Model;
+    private IList<AttributeModel> Attributes;
     bool isSuccess = true;
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             int id = Convert.ToInt32(Id);
-            Model = await _categoryRepo.Get(Endpoints.CategoriesEndpoint, id);
+            var info = await _categoryRepo.Get(Endpoints.CategoriesEndpoint, id);
+            Model = _categoryModelFactory.CreateUpdateModel(info);
+            Attributes = await _attributeRepo.Get(Endpoints.AttributesEndpoint);
             this.StateHasChanged();
         }
     }
@@ -52,5 +79,16 @@ else
         {
             _naviManager.NavigateTo("/categories/");
         }
+    }
+
+    private void HandleAddAttribute()
+    {
+        Model.Attributes.Add(new AttributeIdModel());
+        this.StateHasChanged();
+    }
+
+    private void HandleRemoveAttribute(AttributeIdModel id)
+    {
+        Model.Attributes.Remove(id);
     }
 }

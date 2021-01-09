@@ -1,29 +1,72 @@
 ﻿@page "/categories/create"
 @inject ICategoryRepository _categoryRepo;
+@inject IAttributeRepository _attributeRepo;
 @inject NavigationManager _naviManager;
 <div class="card">
     <h3 class="card-title">Create Category</h3>
-    @if (!isSuccess)
+    @if (Model.Attributes == null)
     {
-        <ErrorMessage Message="Something went wrong." />
+        <LoadingMessage Message="Loading..." />
     }
-    <div class="card-body">
-        <EditForm Model="Model" OnValidSubmit="HandleCreateCategory">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="name">Name</label>
-                <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
-                <ValidationMessage For="@(()=>Model.Name)" />
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-        </EditForm>
-    </div>
+    else
+    {
+        @if (!isSuccess)
+        {
+            <ErrorMessage Message="Something went wrong." />
+        }
+        <div class="card-body">
+            <EditForm Model="Model" OnValidSubmit="HandleCreateCategory">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
+                <div class="card-body">
+                    <h2>Attributes</h2>
+                    @foreach (var attributeId in Model.Attributes)
+                    {
+                        <div class="form-group">
+                            <label for="attribute">Attribute</label>
+                            <select @bind="@attributeId.Id" class="form-control" id="attribute">
+                                <option value="">-- Select Attribute --</option>
+                                @if (Attributes != null)
+                                {
+                                    foreach (var att in Attributes)
+                                    {
+                                        <option value="@att.Id">@att.Name (@att.DataType)</option>
+                                    }
+                                }
+                            </select>
+                            <button type="button" class=" btn btn-danger" @onclick="()=>HandleRemoveAttribute(attributeId)">
+                                Remove
+                            </button>
+                        </div>
+                    }
+                    <button type="button" class="btn btn-secondary" @onclick="HandleAddAttribute">Add attribute</button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </EditForm>
+        </div>
+    }
 </div>
 
 @code {
-    private CategoryModel Model = new CategoryModel();
+    private CategoryCreateModel Model = new CategoryCreateModel();
+    private IList<AttributeModel> Attributes;
     bool isSuccess = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model.Attributes = new List<AttributeIdModel>();
+            Attributes = await _attributeRepo.Get(Endpoints.AttributesEndpoint);
+            this.StateHasChanged();
+        }
+    }
+
     private async Task HandleCreateCategory()
     {
         isSuccess = await _categoryRepo.Create(Endpoints.CategoriesEndpoint, Model);
@@ -31,5 +74,16 @@
         {
             _naviManager.NavigateTo("/categories");
         }
+    }
+
+    private void HandleAddAttribute()
+    {
+        Model.Attributes.Add(new AttributeIdModel());
+        this.StateHasChanged();
+    }
+
+    private void HandleRemoveAttribute(AttributeIdModel id)
+    {
+        Model.Attributes.Remove(id);
     }
 }

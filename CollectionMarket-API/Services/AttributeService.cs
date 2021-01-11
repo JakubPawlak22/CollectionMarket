@@ -3,6 +3,7 @@ using CollectionMarket_API.Contracts;
 using CollectionMarket_API.Contracts.Repositories;
 using CollectionMarket_API.DTOs;
 using CollectionMarket_API.Models;
+using CollectionMarket_UI.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,7 @@ namespace CollectionMarket_API.Services
         {
             var attribute = _mapper.Map<Data.Attribute>(attributeDTO);
             var isSuccess = await _attributeRepository.Create(attribute);
-            return new CreateObjectResult
-            {
-                ObjectId = attribute.Id,
-                IsSuccess = isSuccess
-            };
+            return new CreateObjectResult(isSuccess, attribute.Id);
         }
 
         public async Task<bool> Delete(int id)
@@ -47,9 +44,9 @@ namespace CollectionMarket_API.Services
             return dto;
         }
 
-        public async Task<IList<AttributeDTO>> GetAll()
+        public async Task<IList<AttributeDTO>> GetFiltered(AttributeFilters filters)
         {
-            var attribute = await _attributeRepository.GetAll();
+            var attribute = await _attributeRepository.GetFiltered(filters);
             var dtos = _mapper.Map<IList<AttributeDTO>>(attribute);
             return dtos;
         }

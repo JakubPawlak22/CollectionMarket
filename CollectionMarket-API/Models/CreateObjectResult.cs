@@ -7,7 +7,13 @@ namespace CollectionMarket_API.Models
 {
     public class CreateObjectResult
     {
-        public int ObjectId { get; set; }
+        public int? ObjectId { get; set; }
         public bool IsSuccess { get; set; }
+
+        public CreateObjectResult(bool isSuccess, int? objectId)
+        {
+            IsSuccess=isSuccess;
+            ObjectId = objectId;
+        }
     }
 }

@@ -28,11 +28,7 @@ namespace CollectionMarket_API.Services
         {
             var message = _mapper.Map<Message>(messageDTO);
             var isSuccess = await _messageRepository.Create(message);
-            return new CreateObjectResult
-            {
-                ObjectId = message.Id,
-                IsSuccess = isSuccess
-            };
+            return new CreateObjectResult(isSuccess, message.Id);
         }
 
         public async Task<IList<MessageDTO>> GetConversation(MessageFiltersDTO filtersDTO)

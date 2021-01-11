@@ -43,10 +43,12 @@ namespace CollectionMarket_UI
             services.AddScoped<JwtSecurityTokenHandler>();
             services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
             services.AddTransient<IHttpRequestMessageSender, RequestWithBearerTokenSender>();
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IAttributeRepository, AttributeRepository>();
+            services.AddTransient<IAttributeValueModelFactory, AttributeValueModelFactory>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
+            services.AddTransient<IProductTypeRepository, ProductTypeRepository>();
+            services.AddTransient<IProductTypeModelFactory, ProductTypeModelFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

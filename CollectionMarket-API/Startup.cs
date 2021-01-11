@@ -1,10 +1,14 @@
 using AutoMapper;
 using CollectionMarket_API.Contracts;
+using CollectionMarket_API.Contracts.ModelFactories;
 using CollectionMarket_API.Contracts.Repositories;
+using CollectionMarket_API.Contracts.Validators;
 using CollectionMarket_API.Data;
 using CollectionMarket_API.Mappings;
 using CollectionMarket_API.Services;
+using CollectionMarket_API.Services.ModelFactories;
 using CollectionMarket_API.Services.Repositories;
+using CollectionMarket_API.Services.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -98,6 +102,10 @@ namespace CollectionMarket_API
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAttributeRepository, AttributeRepository>();
             services.AddScoped<IAttributeService, AttributeService>();
+            services.AddScoped<IProductTypeService, ProductTypeService>();
+            services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+            services.AddScoped<IProductTypeModelFactory, ProductTypeModelFactory>();
+            services.AddScoped<IProductTypeWithAttributesValidator, ProductTypeWithAttributesValidator>();
 
             services.AddControllers();
         }

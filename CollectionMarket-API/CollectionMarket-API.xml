@@ -4,7 +4,7 @@
         <name>CollectionMarket-API</name>
     </assembly>
     <members>
-        <member name="M:CollectionMarket_API.Controllers.AttributesController.GetAttributes">
+        <member name="M:CollectionMarket_API.Controllers.AttributesController.GetAttributes(CollectionMarket_UI.Filters.AttributeFilters)">
             <summary>
             Get all Attributes
             </summary>
@@ -97,6 +97,42 @@
             </summary>
             <param name="createDTO"></param>
             <returns>A Message's ID</returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.ProductTypesController.GetProductTypes(CollectionMarket_API.Filters.ProductTypeFilters)">
+            <summary>
+            Get all Product Types
+            </summary>
+            <param name="filters">Filters</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.ProductTypesController.GetProductType(System.Int32)">
+            <summary>
+            Gets ProductType by id
+            </summary>
+            <param name="id">ProductType's ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.ProductTypesController.Create(CollectionMarket_API.DTOs.ProductTypeCreateDTO)">
+            <summary>
+            Creates new ProductType
+            </summary>
+            <param name="product">ProductType's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.ProductTypesController.Update(System.Int32,CollectionMarket_API.DTOs.ProductTypeUpdateDTO)">
+            <summary>
+            Updates ProductType
+            </summary>
+            <param name="id">ProductType's ID</param>
+            <param name="product">ProductType's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.ProductTypesController.Delete(System.Int32)">
+            <summary>
+            Removes ProductType by id
+            </summary>
+            <param name="id">ProductType's ID</param>
+            <returns></returns>
         </member>
         <member name="M:CollectionMarket_API.Controllers.UsersController.Login(CollectionMarket_API.DTOs.UserLoginDTO)">
             <summary>

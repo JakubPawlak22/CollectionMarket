@@ -29,13 +29,25 @@ namespace CollectionMarket_API.Mappings
             CreateMap<Category, CategoryDTO>()
                 .ForMember(x => x.Attributes,
                     opt => opt.MapFrom(x => x.CategoryAttributes.Select(att => att.Attribute)));
-
             CreateMap<CategoryDTO, Category>();
             CreateMap<Category, CategoryUpdateDTO>().ReverseMap();
 
             CreateMap<Data.Attribute, AttributeCreateDTO>().ReverseMap();
             CreateMap<Data.Attribute, AttributeDTO>().ReverseMap();
             CreateMap<Data.Attribute, AttributeUpdateDTO>().ReverseMap();
+
+            CreateMap<AttributeValue, AttributeValueDTO>()
+                .ForMember(x=>x.AttributeName, opt=>opt.MapFrom(x=>x.Attribute.Name))
+                .ForMember(x=>x.AttributeValue, opt=>opt.MapFrom(x=>x.Value))
+                .ForMember(x=>x.DataType, opt=>opt.MapFrom(x=>x.Attribute.DataType))
+                .ReverseMap();
+
+            CreateMap<ProductType, ProductTypeDTO>()
+                .ForMember(x => x.CategoryName, 
+                    opt => opt.MapFrom(x => x.Category.Name))
+                .ForMember(x => x.Attributes, 
+                    opt => opt.MapFrom(x => x.AttributeValues))
+                .ReverseMap();
         }
     }
 }

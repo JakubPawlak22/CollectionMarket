@@ -46,9 +46,9 @@ namespace CollectionMarket_API.Services.Repositories
             var attributeMappings = category.CategoryAttributes.ToList();
             foreach (var mapping in attributeMappings)
             {
-                var contact = entity.CategoryAttributes
+                var newMapping = entity.CategoryAttributes
                     .FirstOrDefault(x => x.AttributeId == mapping.AttributeId);
-                if (contact == null)
+                if (newMapping == null)
                     _context.Remove(mapping);
             }
             foreach (var mapping in entity.CategoryAttributes)

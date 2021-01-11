@@ -12,6 +12,7 @@ namespace CollectionMarket_API.Data
         public int Id { get; set; }
         public int AttributeId { get; set; }
         public int ProductTypeId { get; set; }
+        public string Value { get; set; }
 
         [ForeignKey("AttributeId")]
         public virtual Attribute Attribute { get; set; }

@@ -1,5 +1,6 @@
 ﻿using CollectionMarket_API.Contracts.Repositories;
 using CollectionMarket_API.Data;
+using CollectionMarket_UI.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,23 @@ namespace CollectionMarket_API.Services.Repositories
         {
             var attribute = await _context.Attributes.FindAsync(id);
             return attribute != null;
+        }
+
+        public async Task<IList<Data.Attribute>> GetFiltered(AttributeFilters filters)
+        {
+            var query = _context.Attributes.AsQueryable();
+            if (filters != null)
+            {
+                if (filters.CategoryId != null)
+                    query = query
+                        .Where(x => x.CategoryAttributes
+                            .Where(att => att.CategoryId == filters.CategoryId)
+                            .Any());
+            }
+
+            var attributes = await query
+                .ToListAsync();
+            return attributes;
         }
     }
 }

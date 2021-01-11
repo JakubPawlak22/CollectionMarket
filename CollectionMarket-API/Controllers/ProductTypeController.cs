@@ -1,6 +1,6 @@
 ﻿using CollectionMarket_API.Contracts;
 using CollectionMarket_API.DTOs;
-using CollectionMarket_UI.Filters;
+using CollectionMarket_API.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,32 +13,33 @@ namespace CollectionMarket_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AttributesController : ControllerBase
+    public class ProductTypesController : ControllerBase
     {
-        private readonly IAttributeService _attributeService;
+        private readonly IProductTypeService _productTypeService;
         private readonly ILoggerService _logger;
 
-        public AttributesController(IAttributeService attributeService,
+        public ProductTypesController(IProductTypeService productTypeService,
             ILoggerService logger)
         {
-            _attributeService = attributeService;
+            _productTypeService = productTypeService;
             _logger = logger;
         }
 
         /// <summary>
-        /// Get all Attributes
+        /// Get all Product Types
         /// </summary>
+        /// <param name="filters">Filters</param>
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAttributes([FromBody] AttributeFilters filters)
+        public async Task<IActionResult> GetProductTypes([FromBody] ProductTypeFilters filters)
         {
             try
             {
-                var attributes = await _attributeService.GetFiltered(filters);
-                return Ok(attributes);
+                var products = await _productTypeService.GetFiltered(filters);
+                return Ok(products);
             }
             catch (Exception e)
             {
@@ -48,9 +49,9 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
-        /// Gets Attribute by id
+        /// Gets ProductType by id
         /// </summary>
-        /// <param name="id">Attribute's ID</param>
+        /// <param name="id">ProductType's ID</param>
         /// <returns></returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
@@ -58,16 +59,16 @@ namespace CollectionMarket_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAttribute(int id)
+        public async Task<IActionResult> GetProductType(int id)
         {
             try
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _attributeService.Exists(id))
+                if (!await _productTypeService.Exists(id))
                     return NotFound();
-                var attribute = await _attributeService.Get(id);
-                return Ok(attribute);
+                var product = await _productTypeService.Get(id);
+                return Ok(product);
             }
             catch (Exception e)
             {
@@ -77,24 +78,24 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
-        /// Creates new Attribute
+        /// Creates new ProductType
         /// </summary>
-        /// <param name="attribute">Attribute's informations</param>
+        /// <param name="product">ProductType's informations</param>
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] AttributeCreateDTO attribute)
+        public async Task<IActionResult> Create([FromBody] ProductTypeCreateDTO product)
         {
             try
             {
-                if (attribute == null)
+                if (product == null)
                     return BadRequest();
                 if (!ModelState.IsValid)
                     return BadRequest();
-                var result = await _attributeService.Create(attribute);
+                var result = await _productTypeService.Create(product);
                 if (!result.IsSuccess)
                     return StatusCode(500);
                 return Created("Create", result.ObjectId);
@@ -107,10 +108,10 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
-        /// Updates Attribute
+        /// Updates ProductType
         /// </summary>
-        /// <param name="id">Attribute's ID</param>
-        /// <param name="attribute">Attribute's informations</param>
+        /// <param name="id">ProductType's ID</param>
+        /// <param name="product">ProductType's informations</param>
         /// <returns></returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrator")]
@@ -118,15 +119,15 @@ namespace CollectionMarket_API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] AttributeUpdateDTO attribute)
+        public async Task<IActionResult> Update(int id, [FromBody] ProductTypeUpdateDTO product)
         {
             try
             {
-                if (attribute == null || id < 1 || id != attribute.Id)
+                if (product == null || id < 1 || id != product.Id)
                     return BadRequest();
                 if (!ModelState.IsValid)
                     return BadRequest();
-                var isSuccess = await _attributeService.Update(attribute);
+                var isSuccess = await _productTypeService.Update(product);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -139,9 +140,9 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
-        /// Removes Attribute by id
+        /// Removes ProductType by id
         /// </summary>
-        /// <param name="id">Attribute's ID</param>
+        /// <param name="id">ProductType's ID</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrator")]
@@ -155,9 +156,9 @@ namespace CollectionMarket_API.Controllers
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _attributeService.Exists(id))
+                if (!await _productTypeService.Exists(id))
                     return NotFound();
-                var isSuccess = await _attributeService.Delete(id);
+                var isSuccess = await _productTypeService.Delete(id);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);

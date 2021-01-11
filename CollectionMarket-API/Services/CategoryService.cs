@@ -39,11 +39,7 @@ namespace CollectionMarket_API.Services
                 });
             }
             var isSuccess = await _categoryRepository.Create(category);
-            return new CreateObjectResult
-            {
-                ObjectId = category.Id,
-                IsSuccess = isSuccess
-            };
+            return new CreateObjectResult(isSuccess, category.Id);
         }
 
         public async Task<bool> Delete(int id)

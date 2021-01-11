@@ -1,0 +1,122 @@
+﻿@page "/producttypes/create"
+@inject IProductTypeRepository _productsRepo;
+@inject ICategoryRepository _categoryRepo;
+@inject IAttributeRepository _attributeRepo;
+@inject IAttributeValueModelFactory _attributeValueModelFactory;
+@inject IProductTypeModelFactory _productModelFactory;
+@inject NavigationManager _naviManager;
+@using Common.Enums
+
+<div class="card">
+    <h3 class="card-title">Create Product</h3>
+    @if (Model.AttributeValues == null)
+    {
+        <LoadingMessage Message="Loading..." />
+    }
+    else
+    {
+        @if (!isSuccess)
+        {
+            <ErrorMessage Message="Something went wrong." />
+        }
+        <div class="card-body">
+            <EditForm Model="Model" OnValidSubmit="HandleCreateProduct">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <InputText Id="name" class="form-control" @bind-Value="Model.Name" />
+                    <ValidationMessage For="@(() => Model.Name)" />
+                </div>
+                <div class="form-group">
+                    <label for="categoryId">Category</label>
+                    <select class="form-control" id="category" @onchange="OnCategoryChange">
+                        <option value="">-- Select Category --</option>
+                        @if (Categories != null)
+                        {
+                            foreach (var cat in Categories)
+                            {
+                                <option value="@cat.Id">@cat.Name</option>
+                            }
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => Model.CategoryId)" />
+                </div>
+                <div class="card-body">
+                    <h2>Attributes</h2>
+                    @foreach (var value in Model.AttributeValues)
+                    {
+                        <div class="form-group">
+                            <label for="name">@value.AttributeName</label>
+                            @switch (value.DataType)
+                            {
+                                case DataTypes.Number:
+                                    <InputNumber Id=@($"value {value.AttributeId}") class="form-control" @bind-Value="value.NumberAttributeValue" />
+                                    break;
+                                case DataTypes.Text:
+                                    <InputText Id=@($"value {value.AttributeId}") class="form-control" @bind-Value="value.TextAttributeValue" />
+                                    break;
+                                case DataTypes.Boolean:
+                                    <select @bind="@value.BooleanAttributeValue" class="form-control" id=@($"value {value.AttributeId}")>
+                                        <option value="">-- Select True or False --</option>
+                                        <option value="True">True</option>
+                                        <option value="False">False</option>
+                                    </select>
+                                    break;
+                                case DataTypes.Date:
+                                    <InputDate Id=@($"value {value.AttributeId}") class="form-control" @bind-Value="value.DateAttributeValue" />
+                                    break;
+                            }
+                        </div>
+                    }
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </EditForm>
+        </div>
+    }
+</div>
+
+@code {
+    private ProductTypeEditFormModel Model = new ProductTypeEditFormModel();
+    private IList<CategoryModel> Categories;
+    private bool isSuccess = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model.AttributeValues = new List<AttributeValueEditFormModel>();
+            Categories = await _categoryRepo.Get(Endpoints.CategoriesEndpoint);
+            this.StateHasChanged();
+        }
+    }
+
+    private async Task HandleCreateProduct()
+    {
+        var createModel = _productModelFactory.CreateCreateModel(Model);
+        isSuccess = await _productsRepo.Create(Endpoints.ProductTypesEndpoint, createModel);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/producttypes");
+        }
+    }
+
+    private async Task OnCategoryChange(ChangeEventArgs e)
+    {
+        int categoryId;
+        if (Int32.TryParse(e.Value.ToString(), out categoryId))
+        {
+            Model.CategoryId = categoryId;
+            if (Model.CategoryId != null)
+            {
+                var attributes = await _attributeRepo.GetCategoryAttributes(Endpoints.AttributesEndpoint, Model.CategoryId.Value);
+                Model.AttributeValues = _attributeValueModelFactory.CreateAttributeValueModels(attributes);
+            }
+        }
+        else
+        {
+            Model.AttributeValues = new List<AttributeValueEditFormModel>();
+        }
+        this.StateHasChanged();
+    }
+}

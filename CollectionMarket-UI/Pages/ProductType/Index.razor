@@ -39,16 +39,10 @@ else
                         <p><a href=@($"categories/{productModel.CategoryId}")>@productModel.CategoryName</a></p>
                     </td>
                     <td>
-                        <a href="/producttypes/@productModel.Id" class="btn btn-primary">
-                            <span class="oi oi-arrow-right">Details</span>
-                        </a>
+                        <DetailsButton Href=@(string.Format("/producttypes/{0}",productModel.Id)) />
                         <AuthorizeView Roles="Administrator">
-                            <a href="/producttypes/edit/@productModel.Id" class="btn btn-secondary">
-                                <span class="oi oi-arrow-right">Edit</span>
-                            </a>
-                            <a href="/producttypes/delete/@productModel.Id" class="btn btn-danger">
-                                <span class="oi oi-arrow-right">Delete</span>
-                            </a>
+                            <EditButton Href=@(string.Format("/producttypes/edit/{0}",productModel.Id))/>
+                            <Delete Href=@(string.Format("/producttypes/delete/{0}",productModel.Id))/>
                         </AuthorizeView>
                     </td>
                 </tr>

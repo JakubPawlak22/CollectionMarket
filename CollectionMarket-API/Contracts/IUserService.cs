@@ -12,5 +12,9 @@ namespace CollectionMarket_API.Contracts
         Task<SignInResult> SignIn(string username, string password);
         Task<string> GenerateJSONWebToken(string username);
         Task<bool> Register(UserRegisterDTO userRegisterDTO);
+        Task<bool> Exists(string name);
+        Task<UserProfileDTO> GetProfileByName(string name);
+        Task<bool> UpdateProfile(UserProfileDTO model, string name);
+        Task<UserDTO> GetByName(string name);
     }
 }

@@ -49,6 +49,7 @@ namespace CollectionMarket_UI
             services.AddTransient<ICategoryModelFactory, CategoryModelFactory>();
             services.AddTransient<IProductTypeRepository, ProductTypeRepository>();
             services.AddTransient<IProductTypeModelFactory, ProductTypeModelFactory>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

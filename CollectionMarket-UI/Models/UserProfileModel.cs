@@ -69,4 +69,38 @@ namespace CollectionMarket_UI.Models
         [Display(Name = "Address")]
         public string Address { get; set; }
     }
+    public class UserProfileModel
+    {
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "City")]
+        public string City { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "Postcode")]
+        public string PostCode { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+    }
+
+    public class UserModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
 }

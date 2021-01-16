@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CollectionMarket_API.Controllers
@@ -73,6 +74,82 @@ namespace CollectionMarket_API.Controllers
                     return StatusCode(500);
                 return Ok();
 
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Gets User by id
+        /// </summary>
+        /// <param name="name">User's name</param>
+        /// <returns></returns>
+        [HttpGet("{name}")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get(string name)
+        {
+            try
+            {
+                if (!await _userService.Exists(name))
+                    return NotFound();
+                var user = await _userService.GetByName(name);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Gets logged User
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("profile")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProfile()
+        {
+            try
+            {
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var profile = await _userService.GetProfileByName(name);
+                return Ok(profile);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Update logged User
+        /// </summary>
+        /// <returns></returns>
+        [HttpPatch]
+        [Route("profile")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateProfile([FromBody] UserProfileDTO user)
+        {
+            try
+            {
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var isSuccess = await _userService.UpdateProfile(user, name);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
             }
             catch (Exception e)
             {

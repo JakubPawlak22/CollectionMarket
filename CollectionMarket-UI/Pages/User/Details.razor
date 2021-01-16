@@ -1,0 +1,33 @@
+﻿@page "/users/{Name}"
+@inject IUserRepository _userRepository;
+
+<h3>User</h3>
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading User informations" />
+}
+else
+{
+    <table class="table table-dark">
+        <tr>
+            <td>Name</td>
+            <td>@Model.Name</td>
+        </tr>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string Name { get; set; }
+
+    private UserModel Model;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model = await _userRepository.Get(Endpoints.UsersEndpoint, Name);
+            this.StateHasChanged();
+        }
+    }
+}

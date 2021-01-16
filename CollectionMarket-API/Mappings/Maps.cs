@@ -24,6 +24,9 @@ namespace CollectionMarket_API.Mappings
 
             CreateMap<UserRegisterDTO, User>()
                 .ForMember(x => x.Money, opt => opt.MapFrom(x => 0));
+            CreateMap<User, UserProfileDTO>();
+            CreateMap<User, UserDTO>()
+                .ForMember(x => x.Name, opt => opt.MapFrom(x => x.UserName));
 
             CreateMap<Category, CategoryCreateDTO>().ReverseMap();
             CreateMap<Category, CategoryDTO>()
@@ -37,15 +40,15 @@ namespace CollectionMarket_API.Mappings
             CreateMap<Data.Attribute, AttributeUpdateDTO>().ReverseMap();
 
             CreateMap<AttributeValue, AttributeValueDTO>()
-                .ForMember(x=>x.AttributeName, opt=>opt.MapFrom(x=>x.Attribute.Name))
-                .ForMember(x=>x.AttributeValue, opt=>opt.MapFrom(x=>x.Value))
-                .ForMember(x=>x.DataType, opt=>opt.MapFrom(x=>x.Attribute.DataType))
+                .ForMember(x => x.AttributeName, opt => opt.MapFrom(x => x.Attribute.Name))
+                .ForMember(x => x.AttributeValue, opt => opt.MapFrom(x => x.Value))
+                .ForMember(x => x.DataType, opt => opt.MapFrom(x => x.Attribute.DataType))
                 .ReverseMap();
 
             CreateMap<ProductType, ProductTypeDTO>()
-                .ForMember(x => x.CategoryName, 
+                .ForMember(x => x.CategoryName,
                     opt => opt.MapFrom(x => x.Category.Name))
-                .ForMember(x => x.Attributes, 
+                .ForMember(x => x.Attributes,
                     opt => opt.MapFrom(x => x.AttributeValues))
                 .ReverseMap();
         }

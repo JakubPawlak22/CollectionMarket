@@ -39,16 +39,10 @@ else
                         @attributeModel.DataType
                     </td>
                     <td>
-                        <a href="/attributes/@attributeModel.Id" class="btn btn-primary">
-                            <span class="oi oi-arrow-right">Details</span>
-                        </a>
+                        <DetailsButton Href=@(string.Format("/atributes/{0}",attributeModel.Id)) />
                         <AuthorizeView Roles="Administrator">
-                            <a href="/attributes/edit/@attributeModel.Id" class="btn btn-secondary">
-                                <span class="oi oi-arrow-right">Edit</span>
-                            </a>
-                            <a href="/attributes/delete/@attributeModel.Id" class="btn btn-danger">
-                                <span class="oi oi-arrow-right">Delete</span>
-                            </a>
+                            <EditButton Href=@(string.Format("/atributes/edit/{0}",attributeModel.Id)) />
+                            <Delete Href=@(string.Format("/atributes/delete/{0}",attributeModel.Id)) />
                         </AuthorizeView>
                     </td>
                 </tr>

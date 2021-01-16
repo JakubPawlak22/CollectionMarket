@@ -148,5 +148,24 @@
             <param name="userRegisterDTO">Account informations</param>
             <returns></returns>
         </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.Get(System.String)">
+            <summary>
+            Gets User by id
+            </summary>
+            <param name="name">User's name</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.GetProfile">
+            <summary>
+            Gets logged User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.UpdateProfile(CollectionMarket_API.DTOs.UserProfileDTO)">
+            <summary>
+            Update logged User
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

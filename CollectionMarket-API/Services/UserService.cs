@@ -2,6 +2,7 @@
 using CollectionMarket_API.Contracts;
 using CollectionMarket_API.Data;
 using CollectionMarket_API.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -47,7 +48,7 @@ namespace CollectionMarket_API.Services
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
@@ -58,7 +59,7 @@ namespace CollectionMarket_API.Services
                 _config["Jwt:Issuer"],
                 claims,
                 null,
-                expires: DateTime.Now.AddHours(2),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials:credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -70,6 +71,38 @@ namespace CollectionMarket_API.Services
             var result = await _userManager.CreateAsync(user, userRegisterDTO.Password);
             await _userManager.AddToRoleAsync(user, "Client");
             return result.Succeeded;
+        }
+
+        public async Task<bool> Exists(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            return user != null;
+        }
+
+        public async Task<UserProfileDTO> GetProfileByName(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            var userDto = _mapper.Map<UserProfileDTO>(user);
+            return userDto;
+        }
+
+        public async Task<bool> UpdateProfile(UserProfileDTO model, string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.City = model.City;
+            user.PostCode = model.PostCode;
+            user.Address = model.Address;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<UserDTO> GetByName(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            var userDTO = _mapper.Map<UserDTO>(user);
+            return userDTO;
         }
     }
 }

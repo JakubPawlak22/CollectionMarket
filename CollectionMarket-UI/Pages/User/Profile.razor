@@ -1,0 +1,51 @@
+﻿@page "/profile"
+@inject IUserRepository _userRepository;
+
+<h3>Profile</h3>
+<a href="/profile/edit" class="btn btn-secondary">
+    <span class="oi oi-arrow-right">Edit</span>
+</a>
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading Profile informations" />
+}
+else
+{
+    <h4>Personal Information</h4>
+    <table class="table table-dark">
+        <tbody>
+            <tr>
+                <td>First Name</td>
+                <td>@Model.FirstName</td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td>@Model.LastName</td>
+            </tr>
+            <tr>
+                <td>City</td>
+                <td>@Model.City</td>
+            </tr>
+            <tr>
+                <td>Postcode</td>
+                <td>@Model.PostCode</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>@Model.Address</td>
+            </tr>
+        </tbody>
+    </table>
+}
+@code {
+    private UserProfileModel Model;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model = await _userRepository.GetLoggedUser(Endpoints.ProfileEndpoint);
+            this.StateHasChanged();
+        }
+    }
+}

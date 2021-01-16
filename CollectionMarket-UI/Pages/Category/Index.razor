@@ -35,16 +35,10 @@ else
                         @category.Name
                     </td>
                     <td>
-                        <a href="/categories/@category.Id" class="btn btn-primary">
-                            <span class="oi oi-arrow-right">Details</span>
-                        </a>
+                        <DetailsButton Href=@(string.Format("/categories/{0}",category.Id)) />
                         <AuthorizeView Roles="Administrator">
-                            <a href="/categories/edit/@category.Id" class="btn btn-secondary">
-                                <span class="oi oi-arrow-right">Edit</span>
-                            </a>
-                            <a href="/categories/delete/@category.Id" class="btn btn-danger">
-                                <span class="oi oi-arrow-right">Delete</span>
-                            </a>
+                            <EditButton Href=@(string.Format("/categories/edit/{0}",category.Id)) />
+                            <Delete Href=@(string.Format("/categories/delete/{0}",category.Id)) />
                         </AuthorizeView>
                     </td>
                 </tr>

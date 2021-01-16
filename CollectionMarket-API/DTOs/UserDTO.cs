@@ -6,11 +6,41 @@ using System.Threading.Tasks;
 
 namespace CollectionMarket_API.DTOs
 {
+    public class UserDTO
+    {
+        public string Id { get; set; }
+         public string Name { get; set; }
+    }
+
+    public class UserProfileDTO
+    {
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        public string LastName { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        public string City { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        public string PostCode { get; set; }
+
+        [Required]
+        [StringLength(256, ErrorMessage = "This field can be up to 256 characters.")]
+        public string Address { get; set; }
+    }
+
     public class UserLoginDTO
     {
         public string Username { get; set; }
         public string Password { get; set; }
     }
+
     public class UserRegisterDTO
     {
         [Required]

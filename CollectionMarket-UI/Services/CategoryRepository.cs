@@ -10,19 +10,13 @@ using System.Threading.Tasks;
 
 namespace CollectionMarket_UI.Services
 {
-    public class CategoryRepository: ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
-        private readonly ILocalStorageService _localStorage;
-        private readonly IHttpClientFactory _clientFactory;
         private readonly IHttpRequestMessageSender _sender;
         private HttpRequestMessageDirector _director;
 
-        public CategoryRepository(IHttpClientFactory clientFactory,
-            ILocalStorageService localStorage,
-            IHttpRequestMessageSender sender)
+        public CategoryRepository(IHttpRequestMessageSender sender)
         {
-            _clientFactory = clientFactory;
-            _localStorage = localStorage;
             _sender = sender;
             _director = new HttpRequestMessageDirector();
             _director.Builder = new HttpRequestMessageBuilder();

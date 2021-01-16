@@ -22,14 +22,14 @@
                 <label for="datatype">DataType</label>
                 <select @bind="Model.DataType" class="form-control" id="datatype">
                     <option value="">-- Select DataType --</option>
-                    @foreach (DataTypes type in (DataTypes[]) Enum.GetValues(typeof(DataTypes)))
+                    @foreach (DataTypes type in (DataTypes[])Enum.GetValues(typeof(DataTypes)))
                     {
 
-                    <option value="@type">@type</option>
+                        <option value="@type">@type</option>
                     }
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            <SubmitButton />
         </EditForm>
     </div>
 </div>

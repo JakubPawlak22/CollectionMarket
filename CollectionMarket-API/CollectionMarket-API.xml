@@ -134,6 +134,41 @@
             <param name="id">ProductType's ID</param>
             <returns></returns>
         </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.GetSaleOffers(CollectionMarket_API.Filters.SaleOfferFilters)">
+            <summary>
+            Get all Sale Offers
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.GetSaleOffer(System.Int32)">
+            <summary>
+            Gets Sale Offer by id
+            </summary>
+            <param name="id">Sale Offer's ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.Create(CollectionMarket_API.DTOs.SaleOfferCreateDTO)">
+            <summary>
+            Creates new Sale Offer
+            </summary>
+            <param name="offer">Sale Offer's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.Update(System.Int32,CollectionMarket_API.DTOs.SaleOfferUpdateDTO)">
+            <summary>
+            Updates Sale Offer
+            </summary>
+            <param name="id">SaleOffer's ID</param>
+            <param name="offer">SaleOffer's informations</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.Delete(System.Int32)">
+            <summary>
+            Removes SaleOffer by id
+            </summary>
+            <param name="id">SaleOffer's ID</param>
+            <returns></returns>
+        </member>
         <member name="M:CollectionMarket_API.Controllers.UsersController.Login(CollectionMarket_API.DTOs.UserLoginDTO)">
             <summary>
             Login

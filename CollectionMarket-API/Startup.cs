@@ -106,6 +106,8 @@ namespace CollectionMarket_API
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IProductTypeModelFactory, ProductTypeModelFactory>();
             services.AddScoped<IProductTypeWithAttributesValidator, ProductTypeWithAttributesValidator>();
+            services.AddScoped<ISaleOffersRepository, SaleOffersRepository>();
+            services.AddScoped<ISaleOffersService, SaleOffersService>();
 
             services.AddControllers();
         }

@@ -44,5 +44,18 @@ namespace CollectionMarket_UI.Services
             }
             return null;
         }
+
+        public async override Task<IList<AttributeModel>> Get(string url)
+        {
+            AttributeFilters attributeFilters = new AttributeFilters();
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Get, url, attributeFilters);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<IList<AttributeModel>>(content);
+            }
+            return null;
+        }
     }
 }

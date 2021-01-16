@@ -38,7 +38,7 @@ else
                         <DetailsButton Href=@(string.Format("/categories/{0}",category.Id)) />
                         <AuthorizeView Roles="Administrator">
                             <EditButton Href=@(string.Format("/categories/edit/{0}",category.Id)) />
-                            <Delete Href=@(string.Format("/categories/delete/{0}",category.Id)) />
+                            <DeleteButton Href=@(string.Format("/categories/delete/{0}",category.Id)) />
                         </AuthorizeView>
                     </td>
                 </tr>

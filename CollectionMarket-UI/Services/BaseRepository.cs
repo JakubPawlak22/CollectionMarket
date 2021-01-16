@@ -29,7 +29,7 @@ namespace CollectionMarket_UI.Services
             _director.Builder = new HttpRequestMessageBuilder();
         }
 
-        public async Task<bool> Create(string url, T obj)
+        public virtual async Task<bool> Create(string url, T obj)
         {
             if (obj == null)
                 return false;
@@ -42,7 +42,7 @@ namespace CollectionMarket_UI.Services
             return false;
         }
 
-        public async Task<bool> Delete(string url, int id)
+        public virtual async Task<bool> Delete(string url, int id)
         {
             if (id < 1)
                 return false;
@@ -55,7 +55,7 @@ namespace CollectionMarket_UI.Services
             return false;
         }
 
-        public async Task<T> Get(string url, int id)
+        public virtual async Task<T> Get(string url, int id)
         {
             if (id < 1)
                 return null;
@@ -69,7 +69,7 @@ namespace CollectionMarket_UI.Services
             return null;
         }
 
-        public async Task<IList<T>> Get(string url)
+        public virtual async Task<IList<T>> Get(string url)
         {
             var request = _director.CreateRequest(HttpMethod.Get, url);
             HttpResponseMessage response = await _sender.Send(request);
@@ -81,7 +81,7 @@ namespace CollectionMarket_UI.Services
             return null;
         }
 
-        public async Task<bool> Update(string url, T obj, int id)
+        public virtual async Task<bool> Update(string url, T obj, int id)
         {
             if (obj == null)
                 return false;

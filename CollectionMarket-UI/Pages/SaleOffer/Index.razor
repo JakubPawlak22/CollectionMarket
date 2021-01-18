@@ -1,0 +1,82 @@
+﻿@inject ISaleOfferRepository _saleOfferRepository;
+
+
+<h4>Offers</h4>
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading Products informations." />
+}
+else
+{
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Seller</th>
+                <th>Condition</th>
+                <th>Description</th>
+                <th>Count</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var offer in Model.OrderBy(x => x.PricePerItem))
+            {
+                <tr>
+                    <td>
+                        <p><a href=@($"users/{offer.SellerUsername}")>@offer.SellerUsername</a></p>
+                    </td>
+                    <td>
+                        @offer.Condition
+                    </td>
+                    <td>
+                        @offer.Description
+                    </td>
+                    <td>
+                        @offer.Count
+                    </td>
+                    <td>
+                        @offer.PricePerItem
+                    </td>
+                    <td>
+                        <AuthorizeView>
+                            @if (context.User.Identity.Name.Equals(offer.SellerUsername))
+                            {
+                                <EditButton Href=@string.Format("/saleoffers/edit/{0}", offer.Id) />
+                                <DeleteButton Href=@string.Format("/saleoffers/delete/{0}", offer.Id) />
+                            }
+                            else
+                            {
+                                <a href="/saleoffers/addtocart/@offer.Id" class="btn btn-primary">
+                                    <span class="oi oi-plus">Add To Cart</span>
+                                </a>
+                            }
+                        </AuthorizeView>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    [Parameter]
+    public int? ProductTypeId { get; set; }
+    [Parameter]
+    public string? SellerUsername { get; set; }
+
+    private IList<SaleOfferModel> Model;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SaleOfferFilters filters = new SaleOfferFilters
+            {
+                ProductTypeId = ProductTypeId,
+                SellerUsername = SellerUsername
+            };
+            Model = await _saleOfferRepository.Get(Endpoints.SaleOffersEndpoint, filters);
+            this.StateHasChanged();
+        }
+    }
+}

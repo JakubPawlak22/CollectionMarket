@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CollectionMarket_API.Controllers
@@ -94,7 +95,8 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!ModelState.IsValid)
                     return BadRequest();
-                var result = await _saleOffersService.Create(offer);
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var result = await _saleOffersService.Create(offer, name);
                 if (!result.IsSuccess)
                     return StatusCode(500);
                 return Created("Create", result.ObjectId);

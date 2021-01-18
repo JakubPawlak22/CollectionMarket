@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using CollectionMarket_API.Contracts;
 using CollectionMarket_API.Contracts.Repositories;
+using CollectionMarket_API.Data;
 using CollectionMarket_API.DTOs;
 using CollectionMarket_API.Filters;
 using CollectionMarket_API.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +16,23 @@ namespace CollectionMarket_API.Services
     public class SaleOffersService: ISaleOffersService
     {
         private readonly ISaleOffersRepository _saleOffersRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public SaleOffersService(ISaleOffersRepository saleOffersRepository,
+            UserManager<User> userManager,
             IMapper mapper)
         {
             _mapper = mapper;
             _saleOffersRepository = saleOffersRepository;
+            _userManager = userManager;
         }
 
-        public async Task<CreateObjectResult> Create(SaleOfferCreateDTO saleOfferDTO)
+        public async Task<CreateObjectResult> Create(SaleOfferCreateDTO saleOfferDTO, string userName)
         {
+            var user = await _userManager.FindByNameAsync(userName);
             var saleOffer = _mapper.Map<Data.SaleOffer>(saleOfferDTO);
+            saleOffer.Seller = user;
             var isSuccess = await _saleOffersRepository.Create(saleOffer);
             return new CreateObjectResult(isSuccess, saleOffer.Id);
         }

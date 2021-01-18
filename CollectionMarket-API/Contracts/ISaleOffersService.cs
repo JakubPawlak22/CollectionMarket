@@ -10,7 +10,7 @@ namespace CollectionMarket_API.Contracts
 {
     public interface ISaleOffersService
     {
-        Task<CreateObjectResult> Create(SaleOfferCreateDTO saleOfferDTO);
+        Task<CreateObjectResult> Create(SaleOfferCreateDTO saleOfferDTO, string userName);
         Task<bool> Update(SaleOfferUpdateDTO saleOfferDTO);
         Task<SaleOfferDTO> Get(int id);
         Task<IList<SaleOfferDTO>> GetFiltered(SaleOfferFilters filters);

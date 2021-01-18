@@ -16,5 +16,6 @@ namespace CollectionMarket_UI.Static
         public static string CategoriesEndpoint = $"{BaseUrl}api/categories/";
         public static string AttributesEndpoint = $"{BaseUrl}api/attributes/";
         public static string ProductTypesEndpoint = $"{BaseUrl}api/producttypes/";
+        public static string SaleOffersEndpoint = $"{BaseUrl}api/saleoffers/";
     }
 }

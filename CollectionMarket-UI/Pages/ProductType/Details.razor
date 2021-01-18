@@ -29,7 +29,7 @@ else
             </tr>
         </tbody>
     </table>
-    <h2>Attributes</h2>
+    <h4>Attributes</h4>
     <table class="table table-dark">
         <thead>
             <tr>
@@ -49,12 +49,23 @@ else
             }
         </tbody>
     </table>
+    <AuthorizeView>
+        <div class="card">
+            <button @onclick="@ShowCreatePartial">Create Offer</button>
+            <div class="card-body">
+                <div hidden="@IsCreatePartialHidden">
+                    <CollectionMarket_UI.Pages.SaleOffer.Create ProductTypeId="Model.Id" />
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+    <CollectionMarket_UI.Pages.SaleOffer.Index ProductTypeId="Model.Id" />
 }
 
 @code {
     [Parameter]
     public string Id { get; set; }
-
+    private bool IsCreatePartialHidden = true;
     private ProductTypeModel Model;
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -64,5 +75,10 @@ else
             Model = await _productsRepo.Get(Endpoints.ProductTypesEndpoint, id);
             this.StateHasChanged();
         }
+    }
+
+    private void ShowCreatePartial()
+    {
+        IsCreatePartialHidden = !IsCreatePartialHidden;
     }
 }

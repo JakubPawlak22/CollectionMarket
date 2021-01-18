@@ -51,6 +51,10 @@ namespace CollectionMarket_API.Mappings
                 .ForMember(x => x.Attributes,
                     opt => opt.MapFrom(x => x.AttributeValues))
                 .ReverseMap();
+
+            CreateMap<SaleOffer, SaleOfferDTO>()
+                .ForMember(x => x.SellerUsername, opt => opt.MapFrom(x => x.Seller.UserName));
+            CreateMap<SaleOfferCreateDTO, SaleOffer>();
         }
     }
 }

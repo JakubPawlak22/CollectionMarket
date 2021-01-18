@@ -99,7 +99,7 @@ namespace CollectionMarket_API.Controllers
                 if (!await _userService.Exists(name))
                     return NotFound();
                 var user = await _userService.GetByName(name);
-                return Ok();
+                return Ok(user);
             }
             catch (Exception e)
             {

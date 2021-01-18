@@ -1,0 +1,61 @@
+﻿@inject ISaleOfferRepository _saleOfferRepo;
+@inject NavigationManager _naviManager;
+@using Common.Enums
+
+<div class="card">
+    <h3 class="card-title">Create Sale Offer</h3>
+    @if (!isSuccess)
+    {
+        <ErrorMessage Message="Something went wrong." />
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleCreateAttribute">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="count">Count</label>
+                <InputNumber Id="count" class="form-control" @bind-Value="Model.Count" />
+                <ValidationMessage For="@(()=>Model.Count)" />
+            </div>
+            <div class="form-group">
+                <label for="price-per-item">Price Per Item</label>
+                <InputNumber Id="price-per-item" class="form-control" @bind-Value="Model.PricePerItem" />
+                <ValidationMessage For="@(()=>Model.PricePerItem)" />
+            </div>
+            <div class="form-group">
+                <label for="condition">Condition</label>
+                <select @bind="Model.Condition" class="form-control" id="condition">
+                    <option value="">-- Select Condition --</option>
+                    @foreach (Condition condition in (Condition[])Enum.GetValues(typeof(Condition)))
+                    {
+
+                        <option value="@condition">@condition</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <InputText Id="description" class="form-control" @bind-Value="Model.Description" />
+                <ValidationMessage For="@(()=>Model.Description)" />
+            </div>
+            <SubmitButton />
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ProductTypeId { get; set; }
+
+    private SaleOfferCreateModel Model = new SaleOfferCreateModel();
+    bool isSuccess = true;
+    private async Task HandleCreateAttribute()
+    {
+        Model.ProductTypeId = ProductTypeId;
+        isSuccess = await _saleOfferRepo.Create(Endpoints.SaleOffersEndpoint, Model);
+        if (isSuccess)
+        {
+            this.StateHasChanged();
+        }
+    }
+}

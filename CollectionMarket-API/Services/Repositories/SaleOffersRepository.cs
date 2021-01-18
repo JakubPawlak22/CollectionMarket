@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CollectionMarket_API.Services.Repositories
 {
-    public class SaleOffersRepository: ISaleOffersRepository
+    public class SaleOffersRepository : ISaleOffersRepository
     {
         private readonly ApplicationDbContext _context;
         public SaleOffersRepository(ApplicationDbContext context)
@@ -64,10 +64,14 @@ namespace CollectionMarket_API.Services.Repositories
             var query = _context.SaleOffers.AsQueryable();
             if (filters != null)
             {
-
+                if (filters.ProductTypeId != null)
+                    query = query.Where(x => x.ProductTypeId == filters.ProductTypeId);
+                if (!string.IsNullOrEmpty(filters.SellerUsername))
+                    query = query.Where(x => x.Seller.UserName.Equals(filters.SellerUsername));
             }
 
             var saleOffers = await query
+                .Include(x => x.Seller)
                 .ToListAsync();
             return saleOffers;
         }

@@ -1,0 +1,15 @@
+﻿@page "/saleoffers/delete/{Id}"
+@inject ISaleOfferRepository _saleOfferRepo;
+@inject NavigationManager _naviManager;
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        int id = Convert.ToInt32(Id);
+        await _saleOfferRepo.Delete(Endpoints.SaleOffersEndpoint, id);
+        _naviManager.NavigateTo("/");
+    }
+}

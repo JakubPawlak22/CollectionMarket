@@ -16,5 +16,6 @@ namespace CollectionMarket_API.Contracts
         Task<IList<SaleOfferDTO>> GetFiltered(SaleOfferFilters filters);
         Task<bool> Delete(int id);
         Task<bool> Exists(int id);
+        Task<bool> IsOfferOwner(int offerId, string userName);
     }
 }

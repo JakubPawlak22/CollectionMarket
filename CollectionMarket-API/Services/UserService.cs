@@ -59,7 +59,7 @@ namespace CollectionMarket_API.Services
                 _config["Jwt:Issuer"],
                 claims,
                 null,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials:credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);

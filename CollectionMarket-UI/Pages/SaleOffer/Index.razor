@@ -47,7 +47,7 @@ else
                             }
                             else
                             {
-                                <a href="/saleoffers/addtocart/@offer.Id" class="btn btn-primary">
+                                <a @onclick="HandleAddToCart" class="btn btn-primary">
                                     <span class="oi oi-plus">Add To Cart</span>
                                 </a>
                             }
@@ -78,5 +78,10 @@ else
             Model = await _saleOfferRepository.Get(Endpoints.SaleOffersEndpoint, filters);
             this.StateHasChanged();
         }
+    }
+
+    private async Task HandleAddToCart()
+    {
+
     }
 }

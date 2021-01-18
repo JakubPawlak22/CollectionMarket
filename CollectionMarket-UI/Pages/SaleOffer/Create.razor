@@ -9,7 +9,7 @@
         <ErrorMessage Message="Something went wrong." />
     }
     <div class="card-body">
-        <EditForm Model="Model" OnValidSubmit="HandleCreateAttribute">
+        <EditForm Model="Model" OnValidSubmit="HandleCreateSaleOffer">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="form-group">
@@ -49,7 +49,7 @@
 
     private SaleOfferCreateModel Model = new SaleOfferCreateModel();
     bool isSuccess = true;
-    private async Task HandleCreateAttribute()
+    private async Task HandleCreateSaleOffer()
     {
         Model.ProductTypeId = ProductTypeId;
         isSuccess = await _saleOfferRepo.Create(Endpoints.SaleOffersEndpoint, Model);

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CollectionMarket_API.Services
 {
-    public class SaleOffersService: ISaleOffersService
+    public class SaleOffersService : ISaleOffersService
     {
         private readonly ISaleOffersRepository _saleOffersRepository;
         private readonly UserManager<User> _userManager;
@@ -66,9 +66,23 @@ namespace CollectionMarket_API.Services
 
         public async Task<bool> Update(SaleOfferUpdateDTO saleOfferDTO)
         {
-            var saleOffer = _mapper.Map<Data.SaleOffer>(saleOfferDTO);
+            var saleOffer = await _saleOffersRepository.GetById(saleOfferDTO.Id);
+            saleOffer.Condition = (int)saleOfferDTO.Condition;
+            saleOffer.Count = saleOfferDTO.Count;
+            saleOffer.Description = saleOfferDTO.Description;
+            saleOffer.PricePerItem = saleOfferDTO.PricePerItem;
             var isSuccess = await _saleOffersRepository.Update(saleOffer);
             return isSuccess;
+        }
+
+        public async Task<bool> IsOfferOwner(int offerId, string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            var offer = await _saleOffersRepository.GetById(offerId);
+            if (user == null || offer == null)
+                return false;
+            return user.Id.Equals(offer.SellerId);
+
         }
     }
 }

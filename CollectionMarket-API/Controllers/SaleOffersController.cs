@@ -124,6 +124,8 @@ namespace CollectionMarket_API.Controllers
         {
             try
             {
+                if (! await IsOfferOwner(offer.Id))
+                    return BadRequest();
                 if (offer == null || id < 1 || id != offer.Id)
                     return BadRequest();
                 if (!ModelState.IsValid)
@@ -159,6 +161,8 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await _saleOffersService.Exists(id))
                     return NotFound();
+                if (!await IsOfferOwner(id))
+                    return BadRequest();
                 var isSuccess = await _saleOffersService.Delete(id);
                 if (!isSuccess)
                     return StatusCode(500);
@@ -169,6 +173,19 @@ namespace CollectionMarket_API.Controllers
                 _logger.LogException(e);
                 return StatusCode(500);
             }
+        }
+
+        private async Task<bool> IsOfferOwner(int offerId)
+        {
+            var loggedUserName = RetrieveLoggedUserName();
+            var isLoggedUserOfferOwner = await _saleOffersService.IsOfferOwner(offerId, loggedUserName);
+            return isLoggedUserOfferOwner;
+        }
+
+        private string RetrieveLoggedUserName()
+        {
+            var username = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            return username;
         }
     }
 }

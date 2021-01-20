@@ -14,12 +14,9 @@ namespace CollectionMarket_API.Mappings
         public Maps()
         {
             CreateMap<Message, MessageDTO>()
-                .ForMember(x => x.ReceiverName, opt => opt.MapFrom(x =>
-                      string.Format("{0} {1}", x.Receiver.FirstName, x.Receiver.LastName)))
-                .ForMember(x => x.SenderName, opt => opt.MapFrom(x =>
-                      string.Format("{0} {1}", x.Sender.FirstName, x.Sender.LastName)));
+                .ForMember(x => x.ReceiverName, opt => opt.MapFrom(x => x.Receiver.UserName))
+                .ForMember(x => x.SenderName, opt => opt.MapFrom(x => x.Sender.UserName));
             CreateMap<MessageDTO, Message>();
-            CreateMap<Message, MessageCreateDTO>().ReverseMap();
             CreateMap<MessageFilters, MessageFiltersDTO>().ReverseMap();
 
             CreateMap<UserRegisterDTO, User>()

@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CollectionMarket_API.DTOs
+namespace CollectionMarket_UI.Models
 {
-    public class MessageDTO
+        public class MessageModel
     {
         public string SenderName { get; set; }
         public string ReceiverName { get; set; }
         public string Content { get; set; }
         public DateTime Date { get; set; }
-    } 
-    public class MessageCreateDTO
+    }
+    public class MessageCreateModel
     {
         public string ReceiverUsername { get; set; }
         public string Content { get; set; }
-    }
-
-    public class MessageFiltersDTO
-    {
-        public string FirstUserId { get; set; }
-        public string SecondUserId { get; set; }
     }
 }

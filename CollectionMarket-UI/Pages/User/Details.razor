@@ -8,13 +8,16 @@
 }
 else
 {
+    <a href="messages/@Model.Name" class="btn btn-secondary">
+        <span class="oi oi-envelope-open">Write a message</span>
+    </a>
     <table class="table table-dark">
         <tr>
             <td>Name</td>
             <td>@Model.Name</td>
         </tr>
     </table>
-    <CollectionMarket_UI.Pages.SaleOffer.Index SellerUsername="@Model.Name"/>
+    <CollectionMarket_UI.Pages.SaleOffer.Index SellerUsername="@Model.Name" />
 }
 
 @code {

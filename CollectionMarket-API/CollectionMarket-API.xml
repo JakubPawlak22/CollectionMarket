@@ -84,12 +84,18 @@
             Endpoint used to interact with Messages in database
             </summary>
         </member>
-        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetMessages(CollectionMarket_API.DTOs.MessageFiltersDTO)">
+        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetConversation(System.String)">
             <summary>
-            Get all Messages between two Users
+            Get all Messages between logged User and choosen User
             </summary>
-            <param name="filtersDTO">Filters</param>
+            <param name="username"></param>
             <returns>All Messages between two Users</returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.MessagesController.GetConversations">
+            <summary>
+            Get conversations list
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:CollectionMarket_API.Controllers.MessagesController.Create(CollectionMarket_API.DTOs.MessageCreateDTO)">
             <summary>

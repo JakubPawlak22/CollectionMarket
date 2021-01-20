@@ -7,7 +7,7 @@ namespace CollectionMarket_API.Filters
 {
     public class MessageFilters
     {
-        public string FirstUserId { get; set; }
-        public string SecondUserId { get; set; }
+        public string FirstUserName { get; set; }
+        public string SecondUserName { get; set; }
     }
 }

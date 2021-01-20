@@ -1,0 +1,63 @@
+﻿@page "/messages/{Username}"
+@inject IMessageRepository _messageRepo;
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading Messages" />
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <h5>@Username</h5>
+        </div>
+        <div class="card-body">
+            @foreach (var message in Model)
+            {
+                <div style="@(message.SenderName.Equals(Username)?string.Empty:"float:right")">
+                    @message.Content
+                    <br />
+                    @message.Date.Date.ToShortDateString()
+                </div>
+                <br />
+                <br />
+                <br />
+            }
+            <EditForm Model="Message" OnValidSubmit="HandleSendMessage">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <InputText Id="message" class="form-control" @bind-Value="Message" />
+                    <ValidationMessage For="@(() => Message)" />
+                </div>
+                <SubmitButton Text="Send" />
+            </EditForm>
+        </div>
+    </div>
+}
+@code {
+    [Parameter]
+    public string Username { get; set; }
+
+    private IList<MessageModel> Model;
+    private string Message = string.Empty;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model = await _messageRepo.GetConversation(Endpoints.MessagesEndpoint, Username);
+            this.StateHasChanged();
+        }
+    }
+
+    private async Task HandleSendMessage()
+    {
+        var model = new MessageCreateModel
+        {
+            Content = Message,
+            ReceiverUsername = Username
+        };
+        await _messageRepo.Create(Endpoints.MessagesEndpoint, model);
+        Message = string.Empty;
+        this.StateHasChanged();
+    }
+}

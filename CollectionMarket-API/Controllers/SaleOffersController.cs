@@ -83,7 +83,7 @@ namespace CollectionMarket_API.Controllers
         /// <param name="offer">Sale Offer's informations</param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

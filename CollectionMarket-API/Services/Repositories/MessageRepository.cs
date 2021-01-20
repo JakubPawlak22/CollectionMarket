@@ -26,13 +26,16 @@ namespace CollectionMarket_API.Services.Repositories
         public async Task<IList<Message>> GetFiltered(MessageFilters filters)
         {
             var query = _context.Messages.AsQueryable();
+            if (filters != null)
+            {
+                if (!string.IsNullOrEmpty(filters.FirstUserName) && !string.IsNullOrEmpty(filters.SecondUserName))
+                    query = query.Where(x =>
+                        (x.Receiver.UserName.Equals(filters.FirstUserName)
+                            && x.Sender.UserName.Equals(filters.SecondUserName))
+                        || (x.Sender.UserName.Equals(filters.FirstUserName)
+                            && x.Receiver.UserName.Equals(filters.SecondUserName)));
 
-            if (!string.IsNullOrEmpty(filters.FirstUserId) && !string.IsNullOrEmpty(filters.SecondUserId))
-                query = query.Where(x =>
-                    (x.ReceiverId.Equals(filters.FirstUserId)
-                        && x.SenderId.Equals(filters.SecondUserId))
-                    || (x.SenderId.Equals(filters.FirstUserId)
-                        && x.ReceiverId.Equals(filters.SecondUserId)));
+            }
 
             var messages = await query
                 .Include(x => x.Receiver)
@@ -76,6 +79,41 @@ namespace CollectionMarket_API.Services.Repositories
         {
             var message = await _context.Messages.FindAsync(id);
             return message != null;
+        }
+
+        public async Task<IList<Message>> GetLastMessages(string loggedUserName)
+        {
+            var users = new List<string>();
+            var senders = _context.Messages
+                 .Where(x => x.Receiver.UserName.Equals(loggedUserName))
+                 .Select(x => x.Sender.UserName)
+                 .Distinct()
+                 .ToList();
+            var receivers = _context.Messages
+                 .Where(x => x.Sender.UserName.Equals(loggedUserName))
+                 .Select(x => x.Receiver.UserName)
+                 .Distinct()
+                 .ToList();
+            users.AddRange(senders);
+            users.AddRange(receivers);
+            users = users.Distinct().ToList();
+
+            List<Message> messages = new List<Message>();
+            foreach (var user in users)
+            {
+                var msg = await _context.Messages
+                    .Where(x =>
+                    (x.Receiver.UserName.Equals(loggedUserName)
+                    && x.Sender.UserName.Equals(user)) ||
+                    (x.Sender.UserName.Equals(loggedUserName)
+                    && x.Receiver.UserName.Equals(user)))
+                    .OrderBy(x => x.Date)
+                    .Include(x => x.Sender)
+                    .Include(x => x.Receiver)
+                    .LastOrDefaultAsync();
+                messages.Add(msg);
+            }
+            return messages;
         }
     }
 }

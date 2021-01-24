@@ -1,6 +1,6 @@
 ﻿using CollectionMarket_API.Contracts;
 using CollectionMarket_API.DTOs;
-using CollectionMarket_API.Filters;
+using Common.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,32 +14,29 @@ namespace CollectionMarket_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SaleOffersController : ControllerBase
+    public class OrdersController : ControllerBase
     {
-        private readonly ISaleOffersService _saleOffersService;
+        private readonly IOrderService _orderService;
         private readonly ILoggerService _logger;
 
-        public SaleOffersController(ISaleOffersService saleOffersService,
+        public OrdersController(IOrderService orderService,
             ILoggerService logger)
         {
-            _saleOffersService = saleOffersService;
+            _orderService = orderService;
             _logger = logger;
         }
 
-        /// <summary>
-        /// Get all Sale Offers
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSaleOffers([FromBody] SaleOfferFilters filters)
+        public async Task<IActionResult> GetLoggedUserOrders()
         {
             try
             {
-                var offers = await _saleOffersService.GetFiltered(filters);
-                return Ok(offers);
+                var orders = await _orderService.Get(RetrieveLoggedUserName());
+                return Ok(orders);
             }
             catch (Exception e)
             {
@@ -48,27 +45,44 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets Sale Offer by id
-        /// </summary>
-        /// <param name="id">Sale Offer's ID</param>
-        /// <returns></returns>
+        [HttpGet]
+        [Route("cart")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetLoggedUserCart()
+        {
+            try
+            {
+                var orders = await _orderService.GetCart(RetrieveLoggedUserName());
+                return Ok(orders);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSaleOffer(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _saleOffersService.Exists(id))
-                    return NotFound();
-                var offer = await _saleOffersService.Get(id);
-                return Ok(offer);
+                if (!await IsOrderSeller(id) || !await IsOrderBuyer(id))
+                    return Unauthorized();
+                var order = await _orderService.Get(id);
+                return Ok(order);
+
             }
             catch (Exception e)
             {
@@ -77,93 +91,23 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        /// <summary>
-        /// Creates new Sale Offer
-        /// </summary>
-        /// <param name="offer">Sale Offer's informations</param>
-        /// <returns></returns>
-        [HttpPost]
+        [HttpPost("{id}")]
         [Authorize]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create([FromBody] SaleOfferCreateDTO offer)
-        {
-            try
-            {
-                if (offer == null)
-                    return BadRequest();
-                if (!ModelState.IsValid)
-                    return BadRequest();
-                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                var result = await _saleOffersService.Create(offer, name);
-                if (!result.IsSuccess)
-                    return StatusCode(500);
-                return Created("Create", result.ObjectId);
-            }
-            catch (Exception e)
-            {
-                _logger.LogException(e);
-                return StatusCode(500);
-            }
-        }
-
-        /// <summary>
-        /// Updates Sale Offer
-        /// </summary>
-        /// <param name="id">SaleOffer's ID</param>
-        /// <param name="offer">SaleOffer's informations</param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Administrator")]
+        [Route("makeorder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, [FromBody] SaleOfferUpdateDTO offer)
-        {
-            try
-            {
-                if (! await IsOfferOwner(offer.Id))
-                    return BadRequest();
-                if (offer == null || id < 1 || id != offer.Id)
-                    return BadRequest();
-                if (!ModelState.IsValid)
-                    return BadRequest();
-                var isSuccess = await _saleOffersService.Update(offer);
-                if (!isSuccess)
-                    return StatusCode(500);
-                return StatusCode(204);
-            }
-            catch (Exception e)
-            {
-                _logger.LogException(e);
-                return StatusCode(500);
-            }
-        }
-
-        /// <summary>
-        /// Removes SaleOffer by id
-        /// </summary>
-        /// <param name="id">SaleOffer's ID</param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Administrator")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> MakeOrder(int id)
         {
             try
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _saleOffersService.Exists(id))
-                    return NotFound();
-                if (!await IsOfferOwner(id))
-                    return BadRequest();
-                var isSuccess = await _saleOffersService.Delete(id);
+                if (!await IsOrderSeller(id))
+                    return Unauthorized();
+                var isSuccess = await _orderService.SetAs(OrderState.Ordered);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -177,21 +121,24 @@ namespace CollectionMarket_API.Controllers
 
         [HttpPost("{id}")]
         [Authorize]
-        [Route("RemoveFromCart")]
+        [Route("sent")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> RemoveFromCart(int id)
+        public async Task<IActionResult> SetAsSent(int id)
         {
             try
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _saleOffersService.Exists(id))
-                    return NotFound();
-                if (!await IsOfferOwner(id))
-                    return BadRequest();
+                if (!await IsOrderSeller(id))
+                    return Unauthorized();
+                var isSuccess = await _orderService.SetAs(OrderState.Sent);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
             }
             catch (Exception e)
             {
@@ -202,21 +149,24 @@ namespace CollectionMarket_API.Controllers
 
         [HttpPost("{id}")]
         [Authorize]
-        [Route("AddToCart")]
+        [Route("lost")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddToCart(int id)
+        public async Task<IActionResult> SetAsLost(int id)
         {
             try
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await _saleOffersService.Exists(id))
-                    return NotFound();
-                if (!await IsOfferOwner(id))
-                    return BadRequest();
+                if (!await IsOrderBuyer(id))
+                    return Unauthorized();
+                var isSuccess = await _orderService.SetAs(OrderState.Lost);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
             }
             catch (Exception e)
             {
@@ -225,11 +175,71 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        private async Task<bool> IsOfferOwner(int offerId)
+        [HttpPost("{id}")]
+        [Authorize]
+        [Route("delivered")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SetAsDelivered(int id)
+        {
+            try
+            {
+                if (id < 1)
+                    return BadRequest();
+                if (!await IsOrderBuyer(id))
+                    return Unauthorized();
+                var isSuccess = await _orderService.SetAs(OrderState.Delivered);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("{id}")]
+        [Authorize]
+        [Route("evaluation")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddEvaluation( int id, [FromBody] EvaluationDTO evaluation)
+        {
+            try
+            {
+                if (id < 1)
+                    return BadRequest();
+                if (!await IsOrderBuyer(id))
+                    return Unauthorized();
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        private async Task<bool> IsOrderSeller(int orderId)
         {
             var loggedUserName = RetrieveLoggedUserName();
-            var isLoggedUserOfferOwner = await _saleOffersService.IsOfferOwner(offerId, loggedUserName);
-            return isLoggedUserOfferOwner;
+            var isLoggedUserOrderSeller = await _orderService.IsOrderSeller(orderId, loggedUserName);
+            return isLoggedUserOrderSeller;
+        }
+
+        private async Task<bool> IsOrderBuyer(int orderId)
+        {
+            var loggedUserName = RetrieveLoggedUserName();
+            var isLoggedUserOrderBuyer = await _orderService.IsOrderBuyer(orderId, loggedUserName);
+            return isLoggedUserOrderBuyer;
         }
 
         private string RetrieveLoggedUserName()

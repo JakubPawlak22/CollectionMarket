@@ -26,8 +26,8 @@ namespace CollectionMarket_API.Services.Repositories
         {
             var category = await _context.Categories
                 .Include(x => x.CategoryAttributes)
-                .ThenInclude(x=>x.Attribute)
-                .SingleOrDefaultAsync(x=>x.Id==id);
+                .ThenInclude(x => x.Attribute)
+                .SingleOrDefaultAsync(x => x.Id == id);
             return category;
         }
 

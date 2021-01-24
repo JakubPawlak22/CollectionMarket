@@ -108,6 +108,8 @@ namespace CollectionMarket_API
             services.AddScoped<IProductTypeWithAttributesValidator, ProductTypeWithAttributesValidator>();
             services.AddScoped<ISaleOffersRepository, SaleOffersRepository>();
             services.AddScoped<ISaleOffersService, SaleOffersService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.AddControllers();
         }

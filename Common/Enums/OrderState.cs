@@ -6,10 +6,10 @@ namespace Common.Enums
 {
     public enum OrderState
     {
-        Ordered = 0,
-        Send = 1,
-        Delivered = 2,
-        ReportedAsLost = 3,
-        Lost = 4
+        InCart = 0,
+        Ordered = 1,
+        Sent = 2,
+        Delivered = 3,
+        Lost = 4,
     }
 }

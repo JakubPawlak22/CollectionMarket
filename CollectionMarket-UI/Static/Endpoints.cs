@@ -17,5 +17,12 @@ namespace CollectionMarket_UI.Static
         public static string AttributesEndpoint = $"{BaseUrl}api/attributes/";
         public static string ProductTypesEndpoint = $"{BaseUrl}api/producttypes/";
         public static string SaleOffersEndpoint = $"{BaseUrl}api/saleoffers/";
+        public static string OrdersEndpoint = $"{BaseUrl}api/orders/";
+        public static string MakeOrderEndpoint = $"{OrdersEndpoint}makeorder/";
+        public static string CartEndpoint = $"{OrdersEndpoint}cart/";
+        public static string SentEndpoint = $"{OrdersEndpoint}sent/";
+        public static string LostEndpoint = $"{OrdersEndpoint}lost/";
+        public static string DeliveredEndpoint = $"{OrdersEndpoint}delivered/";
+        public static string EvaluationEndpoint = $"{OrdersEndpoint}evaluation/";
     }
 }

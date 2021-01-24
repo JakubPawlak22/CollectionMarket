@@ -16,5 +16,8 @@ namespace CollectionMarket_API.Contracts
         Task<UserProfileDTO> GetProfileByName(string name);
         Task<bool> UpdateProfile(UserProfileDTO model, string name);
         Task<UserDTO> GetByName(string name);
+        Task<bool> Deposit(CashFlowDTO cashFlow, string name);
+        Task<bool> Withdraw(CashFlowDTO cashFlow, string name);
+        Task<decimal> GetMoney(string name);
     }
 }

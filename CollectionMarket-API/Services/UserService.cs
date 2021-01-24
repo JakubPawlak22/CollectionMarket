@@ -104,5 +104,29 @@ namespace CollectionMarket_API.Services
             var userDTO = _mapper.Map<UserDTO>(user);
             return userDTO;
         }
+
+        public async Task<bool> Deposit(CashFlowDTO cashFlow, string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            user.Money += cashFlow.AmountOfMoney;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<bool> Withdraw(CashFlowDTO cashFlow, string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            if (user.Money < cashFlow.AmountOfMoney)
+                return false;
+            user.Money -= cashFlow.AmountOfMoney;
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
+        }
+
+        public async Task<decimal> GetMoney(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            return user.Money;
+        }
     }
 }

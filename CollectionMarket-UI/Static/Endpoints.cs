@@ -12,6 +12,9 @@ namespace CollectionMarket_UI.Static
         public static string RegisterEndpoint = $"{UsersEndpoint}register/";
         public static string LoginEndpoint = $"{UsersEndpoint}login/";
         public static string ProfileEndpoint = $"{UsersEndpoint}profile/";
+        public static string WithdrawEndpoint = $"{UsersEndpoint}withdraw/";
+        public static string DepositEndpoint = $"{UsersEndpoint}deposit/";
+        public static string MoneyEndpoint = $"{UsersEndpoint}money/";
         public static string MessagesEndpoint = $"{BaseUrl}api/messages/";
         public static string CategoriesEndpoint = $"{BaseUrl}api/categories/";
         public static string AttributesEndpoint = $"{BaseUrl}api/attributes/";

@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IUserRepository _userRepo;
 
 <div class="sidebar">
     <NavMenu />
@@ -6,10 +7,25 @@
 
 <div class="main">
     <div class="top-row px-4">
-        
+        <AuthorizeView>
+            Money: @(Money.HasValue ? Money.ToString() : "??,??")€
+        </AuthorizeView>
     </div>
 
     <div class="content px-4">
         @Body
     </div>
 </div>
+
+@code
+{
+    private decimal? Money;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+        }
+        Money = await _userRepo.GetMoney(Endpoints.MoneyEndpoint);
+    }
+}

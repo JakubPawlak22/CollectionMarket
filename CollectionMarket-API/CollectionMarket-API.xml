@@ -202,9 +202,27 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.GetMoney">
+            <summary>
+            Gets logged User
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CollectionMarket_API.Controllers.UsersController.UpdateProfile(CollectionMarket_API.DTOs.UserProfileDTO)">
             <summary>
             Update logged User
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.Deposit(CollectionMarket_API.DTOs.CashFlowDTO)">
+            <summary>
+            Deposit money
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.UsersController.Withdraw(CollectionMarket_API.DTOs.CashFlowDTO)">
+            <summary>
+            Withdrawal from account
             </summary>
             <returns></returns>
         </member>

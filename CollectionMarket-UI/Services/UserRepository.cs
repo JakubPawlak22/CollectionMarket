@@ -39,7 +39,7 @@ namespace CollectionMarket_UI.Services
         {
             if (model == null)
                 return false;
-            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Patch, url, model);
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Put, url, model);
             HttpResponseMessage response = await _sender.Send(request);
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
@@ -58,6 +58,44 @@ namespace CollectionMarket_UI.Services
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<UserModel>(content);
+            }
+            return null;
+        }
+
+        public async Task<bool> Withdraw(string url, CashFlowModel model)
+        {
+            if (model == null)
+                return false;
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Post, url, model);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> Deposit(string url, CashFlowModel model)
+        {
+            if (model == null)
+                return false;
+            var request = _director.CreateRequestWithSerializedObject(HttpMethod.Post, url, model);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<decimal?> GetMoney(string url)
+        {
+            var request = _director.CreateRequest(HttpMethod.Get, url);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<decimal?>(content);
             }
             return null;
         }

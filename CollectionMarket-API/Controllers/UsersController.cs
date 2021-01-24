@@ -133,10 +133,34 @@ namespace CollectionMarket_API.Controllers
         }
 
         /// <summary>
+        /// Gets logged User
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("money")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetMoney()
+        {
+            try
+            {
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var money = await _userService.GetMoney(name);
+                return Ok(money);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// Update logged User
         /// </summary>
         /// <returns></returns>
-        [HttpPatch]
+        [HttpPut]
         [Route("profile")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -147,6 +171,58 @@ namespace CollectionMarket_API.Controllers
             {
                 var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 var isSuccess = await _userService.UpdateProfile(user, name);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Deposit money
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("deposit")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Deposit([FromBody] CashFlowDTO cashFlow)
+        {
+            try
+            {
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var isSuccess = await _userService.Deposit(cashFlow, name);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
+        /// Withdrawal from account
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("withdraw")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Withdraw([FromBody] CashFlowDTO cashFlow)
+        {
+            try
+            {
+                var name = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var isSuccess = await _userService.Withdraw(cashFlow, name);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);

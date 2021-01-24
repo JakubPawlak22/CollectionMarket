@@ -1,0 +1,37 @@
+﻿@inject IUserRepository _userRepo;
+@inject NavigationManager _naviManager;
+
+<div class="card">
+    <h3 class="card-title">Withdraw</h3>
+
+    @if (!isSuccess)
+    {
+        <ErrorMessage Message="Something went wrong." />
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleWithdraw">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="withdraw-amount-of-money">Withdraw</label>
+                <InputNumber Id="withdraw-amount-of-money" class="form-control" @bind-Value="Model.AmountOfMoney" />
+                <ValidationMessage For="@(()=>Model.AmountOfMoney)" />
+            </div>
+            <SubmitButton />
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    CashFlowModel Model = new CashFlowModel();
+    bool isSuccess = true;
+
+    private async Task HandleWithdraw()
+    {
+        isSuccess = await _userRepo.Withdraw(Endpoints.WithdrawEndpoint, Model);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo("/profile");
+        }
+    }
+}

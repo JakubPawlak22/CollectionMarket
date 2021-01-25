@@ -53,6 +53,7 @@ namespace CollectionMarket_UI
             services.AddTransient<ISaleOfferRepository, SaleOfferRepository>();
             services.AddTransient<ISaleOfferModelFactory, SaleOfferModelFactory>();
             services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IOrderRepository, OrderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

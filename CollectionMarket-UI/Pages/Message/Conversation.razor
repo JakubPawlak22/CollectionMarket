@@ -44,8 +44,7 @@ else
     {
         if (firstRender)
         {
-            Model = await _messageRepo.GetConversation(Endpoints.MessagesEndpoint, Username);
-            this.StateHasChanged();
+            await Refresh();
         }
     }
 
@@ -58,6 +57,17 @@ else
         };
         await _messageRepo.Create(Endpoints.MessagesEndpoint, model);
         Message = string.Empty;
-        this.StateHasChanged();
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        await LoadModel();
+        StateHasChanged();
+    }
+
+    private async Task LoadModel()
+    {
+        Model = await _messageRepo.GetConversation(Endpoints.MessagesEndpoint, Username);
     }
 }

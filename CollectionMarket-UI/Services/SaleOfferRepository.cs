@@ -24,6 +24,19 @@ namespace CollectionMarket_UI.Services
             };
         }
 
+        public async Task<bool> AddToCart(string url, int id)
+        {
+            if (id < 1)
+                return false;
+            var request = _director.CreateRequest(HttpMethod.Post, url + id);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<bool> Create(string url, SaleOfferCreateModel model)
         {
             if (model == null)
@@ -79,6 +92,19 @@ namespace CollectionMarket_UI.Services
                 return JsonConvert.DeserializeObject<IList<SaleOfferModel>>(content);
             }
             return null;
+        }
+
+        public async Task<bool> RemoveFromCart(string url, int id)
+        {
+            if (id < 1)
+                return false;
+            var request = _director.CreateRequest(HttpMethod.Post, url + id);
+            HttpResponseMessage response = await _sender.Send(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> Update(string url, SaleOfferUpdateModel model, int id)

@@ -1,5 +1,7 @@
 ﻿using CollectionMarket_API.Contracts.Repositories;
 using CollectionMarket_API.Data;
+using CollectionMarket_API.DTOs;
+using Common.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,14 +20,26 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<IList<Order>> GetAll()
         {
-            var categorys = await _context.Orders.ToListAsync();
-            return categorys;
+            var orders = await _context.Orders
+                .Include(x => x.Buyer)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.Seller)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.ProductType)
+                .ToListAsync();
+            return orders;
         }
 
         public async Task<Order> GetById(int id)
         {
-            var category = await _context.Orders.FindAsync(id);
-            return category;
+            var order = await _context.Orders
+                .Include(x => x.Buyer)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.Seller)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.ProductType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return order;
         }
 
         public async Task<bool> Create(Order entity)
@@ -56,6 +70,61 @@ namespace CollectionMarket_API.Services.Repositories
         {
             var order = await _context.Orders.FindAsync(id);
             return order != null;
+        }
+
+        public async Task<IList<Order>> GetSoldBy(string username)
+        {
+            var orders = await _context.Orders
+                .Where(x => x.SaleOffers.All(x => x.Seller.UserName.Equals(username)))
+                .Where(x => x.OrderState != (int)OrderState.InCart
+                    && x.SaleOffers.Any())
+                .Include(x => x.Buyer)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.Seller)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.ProductType)
+                .ToListAsync();
+            return orders;
+        }
+
+        public async Task<IList<Order>> GetBoughtBy(string username)
+        {
+            var orders = await _context.Orders
+                .Where(x => x.Buyer.UserName.Equals(username))
+                .Where(x => x.OrderState != (int)OrderState.InCart
+                    && x.SaleOffers.Any())
+                .Include(x => x.Buyer)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.Seller)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.ProductType)
+                .ToListAsync();
+            return orders;
+        }
+
+        public async Task<IList<Order>> GetCart(string username)
+        {
+            var orders = await _context.Orders
+                .Where(x => x.Buyer.UserName.Equals(username)
+                    && x.OrderState == (int)OrderState.InCart
+                    && x.SaleOffers.Any())
+                .Include(x => x.Buyer)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.Seller)
+                .Include(x => x.SaleOffers)
+                .ThenInclude(x => x.ProductType)
+                .ToListAsync();
+            return orders;
+        }
+
+        public async Task<Order> GetOrderFromCart(User seller, User buyer)
+        {
+            return await _context.Orders
+                .Where(x => x.OrderState == (int)OrderState.InCart
+                    && x.SaleOffers.Any()
+                    && x.SaleOffers.FirstOrDefault().Seller == seller
+                    && x.Buyer == buyer)
+                .FirstOrDefaultAsync();
         }
     }
 }

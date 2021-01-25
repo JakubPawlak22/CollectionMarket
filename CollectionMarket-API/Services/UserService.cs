@@ -128,5 +128,25 @@ namespace CollectionMarket_API.Services
             var user = await _userManager.FindByNameAsync(name);
             return user.Money;
         }
+
+        public bool HasEnoughMoney(User buyer, decimal price)
+        {
+            return buyer.Money >= price;
+        }
+
+        public async Task<bool> SendMoney(Order order)
+        {
+            var buyer = order.Buyer;
+            var seller = order.SaleOffers.FirstOrDefault().Seller;
+            buyer.Money -= order.Price;
+            seller.Money += order.Price;
+            var result = await _userManager.UpdateAsync(buyer);
+            if (result.Succeeded)
+            {
+                result = await _userManager.UpdateAsync(seller);
+                return result.Succeeded;
+            }
+            return false;
+        }
     }
 }

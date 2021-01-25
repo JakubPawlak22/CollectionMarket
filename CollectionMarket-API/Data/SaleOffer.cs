@@ -17,11 +17,15 @@ namespace CollectionMarket_API.Data
         public int Condition { get; set; }
         public bool IsInCart { get; set; }
         public string Description { get; set; }
+        public int? OrderId { get; set; }
 
         [ForeignKey("SellerId")]
         public virtual User Seller { get; set; }
 
         [ForeignKey("ProductTypeId")]
         public virtual ProductType ProductType { get; set; }
+
+        [ForeignKey("OrderId")]
+        public virtual Order Order { get; set; }
     }
 }

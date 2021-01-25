@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CollectionMarket_API.DTOs
+namespace CollectionMarket_UI.Models
 {
-    public class OrderDTO
+    public class OrderModel
     {
         public int Id { get; set; }
         public decimal ProductsPrice { get; set; }
@@ -18,6 +18,6 @@ namespace CollectionMarket_API.DTOs
         public string Postcode { get; set; }
         public string Address { get; set; }
         public OrderState OrderState { get; set; }
-        public virtual IList<SaleOfferDTO> SaleOffers { get; set; }
+        public IList<SaleOfferModel> SaleOffers { get; set; }
     }
 }

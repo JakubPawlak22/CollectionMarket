@@ -1,0 +1,176 @@
+﻿@page "/orders/sellerdetails/{Id}"
+@inject IOrderRepository _orderRepo;
+@inject ISaleOfferRepository _saleOfferRepo;
+@using Common.Enums;
+<AuthorizeView>
+    @if (Model == null)
+    {
+        <LoadingMessage Message="Loading Details." />
+    }
+    else
+    {
+        <h3>Order</h3>
+        <div class="card">
+            <div class="card-title">
+                <h4><a href=@($"users/{Model.BuyerUsername}")>@Model.BuyerUsername</a></h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-dark">
+                    <tbody>
+                        <tr>
+                            <td>
+                                Seller
+                            </td>
+                            <td>
+                                <p><a href=@($"users/{Model.SellerUsername}")>@Model.SellerUsername</a></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Buyer
+                            </td>
+                            <td>
+                                <p><a href=@($"users/{Model.BuyerUsername}")>@Model.BuyerUsername</a></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Order State
+                            </td>
+                            <td>
+                                @Model.OrderState
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Products Price
+                            </td>
+                            <td>
+                                @Model.ProductsPrice
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Shipping Price
+                            </td>
+                            <td>
+                                @Model.ShippingPrice
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total Price
+                            </td>
+                            <td>
+                                @Model.TotalPrice
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Buyer's City
+                            </td>
+                            <td>
+                                @Model.City
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Buyer's Postcode
+                            </td>
+                            <td>
+                                @Model.Postcode
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Buyer's Address
+                            </td>
+                            <td>
+                                @Model.Address
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Condition</th>
+                            <th>Description</th>
+                            <th>Count</th>
+                            <th>Price per Item</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var offer in Model.SaleOffers)
+                        {
+                            <tr>
+                                <td>
+                                    <p><a href=@($"producttypes/{offer.ProductTypeId}")>@offer.ProductTypeName</a></p>
+                                </td>
+                                <td>
+                                    @offer.Condition
+                                </td>
+                                <td>
+                                    @offer.Description
+                                </td>
+                                <td>
+                                    @offer.Count
+                                </td>
+                                <td>
+                                    @offer.PricePerItem
+                                </td>
+                                <td>
+                                    @offer.PricePerItem*@offer.Count
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.OrderState == OrderState.Ordered)
+                {
+                    <a @onclick="HandleSetAsSent" class="btn btn-primary">
+                        <span class="oi oi-plus">Set As Sent</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    @code {
+        [Parameter]
+        public string Id { get; set; }
+
+        private OrderModel Model;
+        private bool isAnyOrder = true;
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Refresh();
+            }
+        }
+
+        private async Task HandleSetAsSent()
+        {
+            var isSuccess = await _saleOfferRepo.RemoveFromCart(Endpoints.SentEndpoint, Model.Id);
+            if (isSuccess)
+            {
+                await Refresh();
+            }
+        }
+        private async Task Refresh()
+        {
+            await LoadModel();
+            this.StateHasChanged();
+        }
+
+        private async Task LoadModel()
+        {
+            int id = Convert.ToInt32(Id);
+            Model = await _orderRepo.GetOrderById(Endpoints.OrdersEndpoint, id);
+        }
+    }
+
+</AuthorizeView>

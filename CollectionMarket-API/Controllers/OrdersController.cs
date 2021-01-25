@@ -27,15 +27,36 @@ namespace CollectionMarket_API.Controllers
         }
 
         [HttpGet]
+        [Route("soldorders")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetLoggedUserOrders()
+        public async Task<IActionResult> GetLoggedUserSoldOrders()
         {
             try
             {
-                var orders = await _orderService.Get(RetrieveLoggedUserName());
+                var orders = await _orderService.GetSoldBy(RetrieveLoggedUserName());
+                return Ok(orders);
+            }
+            catch (Exception e)
+            {
+                _logger.LogException(e);
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("boughtorders")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetLoggedUserBoughtOrders()
+        {
+            try
+            {
+                var orders = await _orderService.GetBoughtBy(RetrieveLoggedUserName());
                 return Ok(orders);
             }
             catch (Exception e)
@@ -78,7 +99,7 @@ namespace CollectionMarket_API.Controllers
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await IsOrderSeller(id) || !await IsOrderBuyer(id))
+                if (!await IsOrderSeller(id) && !await IsOrderBuyer(id))
                     return Unauthorized();
                 var order = await _orderService.Get(id);
                 return Ok(order);
@@ -91,9 +112,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("makeorder")]
+        [Route("makeorder/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -105,9 +126,9 @@ namespace CollectionMarket_API.Controllers
             {
                 if (id < 1)
                     return BadRequest();
-                if (!await IsOrderSeller(id))
+                if (!await IsOrderBuyer(id))
                     return Unauthorized();
-                var isSuccess = await _orderService.SetAs(OrderState.Ordered);
+                var isSuccess = await _orderService.SetAsOrdered(id);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -119,9 +140,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("sent")]
+        [Route("sent/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -135,7 +156,7 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await IsOrderSeller(id))
                     return Unauthorized();
-                var isSuccess = await _orderService.SetAs(OrderState.Sent);
+                var isSuccess = await _orderService.SetAsSent(id);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -147,9 +168,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("lost")]
+        [Route("lost/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -163,7 +184,7 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await IsOrderBuyer(id))
                     return Unauthorized();
-                var isSuccess = await _orderService.SetAs(OrderState.Lost);
+                var isSuccess = await _orderService.SetAsLost(id);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -175,9 +196,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("delivered")]
+        [Route("delivered/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -191,7 +212,7 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await IsOrderBuyer(id))
                     return Unauthorized();
-                var isSuccess = await _orderService.SetAs(OrderState.Delivered);
+                var isSuccess = await _orderService.SetAsDelivered(id);
                 if (!isSuccess)
                     return StatusCode(500);
                 return StatusCode(204);
@@ -203,15 +224,15 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("evaluation")]
+        [Route("evaluation/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddEvaluation( int id, [FromBody] EvaluationDTO evaluation)
+        public async Task<IActionResult> AddEvaluation(int id, [FromBody] EvaluationDTO evaluation)
         {
             try
             {
@@ -219,6 +240,10 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await IsOrderBuyer(id))
                     return Unauthorized();
+                var isSuccess = await _orderService.AddEvaluation(id, evaluation, RetrieveLoggedUserName());
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
 
             }
             catch (Exception e)

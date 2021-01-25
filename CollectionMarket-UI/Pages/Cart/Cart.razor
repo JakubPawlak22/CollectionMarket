@@ -1,0 +1,139 @@
+﻿@page "/cart/"
+@inject IOrderRepository _orderRepo;
+@inject ISaleOfferRepository _saleOfferRepo;
+
+<h3>Cart</h3>
+@if (!isAnyOrder)
+{
+    <LoadingMessage Message="Cart is empty." />
+}
+else if (Model == null)
+{
+    <LoadingMessage Message="Loading Cart." />
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        <div class="card">
+            <div class="card-title">
+                <h4><a href=@($"users/{order.SaleOffers.FirstOrDefault().SellerUsername}")>@order.SaleOffers.FirstOrDefault().SellerUsername</a></h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-dark">
+                    <tbody>
+                        <tr>
+                            <td>
+                                Products Price
+                            </td>
+                            <td>
+                                @order.ProductsPrice
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Shipping Price
+                            </td>
+                            <td>
+                                @order.ShippingPrice
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total Price
+                            </td>
+                            <td>
+                                @order.TotalPrice
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Condition</th>
+                            <th>Description</th>
+                            <th>Count</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var offer in order.SaleOffers)
+                        {
+                            <tr>
+                                <td>
+                                    <p><a href=@($"producttypes/{offer.ProductTypeId}")>@offer.ProductTypeName</a></p>
+                                </td>
+                                <td>
+                                    @offer.Condition
+                                </td>
+                                <td>
+                                    @offer.Description
+                                </td>
+                                <td>
+                                    @offer.Count
+                                </td>
+                                <td>
+                                    @offer.PricePerItem
+                                </td>
+                                <td>
+                                    <a @onclick="(()=>HandleRemoveFromCart(offer.Id))" class="btn btn-danger">
+                                        <span class="oi oi-trash">Remove</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <a @onclick="(()=>HandleMakeOrder(order.Id))" class="btn btn-primary">
+                    <span class="oi oi-plus">MakeOrder</span>
+                </a>
+            </div>
+        </div>
+        <br />
+    }
+}
+
+@code {
+    private IList<OrderModel> Model;
+    private bool isAnyOrder = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Refresh();
+        }
+    }
+
+    private async Task HandleRemoveFromCart(int id)
+    {
+        var isSuccess = await _saleOfferRepo.RemoveFromCart(Endpoints.RemoveFromCartEndpoint, id);
+        if (isSuccess)
+        {
+            await Refresh();
+        }
+    }
+
+    private async Task HandleMakeOrder(int id)
+    {
+        var isSuccess = await _orderRepo.ChangeState(Endpoints.MakeOrderEndpoint, id);
+        if (isSuccess)
+        {
+            await Refresh();
+        }
+    }
+
+    private async Task Refresh()
+    {
+        await LoadModel();
+        this.StateHasChanged();
+    }
+
+    private async Task LoadModel()
+    {
+        Model = await _orderRepo.GetLoggedUserCart(Endpoints.CartEndpoint);
+        isAnyOrder = (Model != null && Model.Count > 0);
+    }
+}

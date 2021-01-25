@@ -1,4 +1,5 @@
-﻿using CollectionMarket_API.DTOs;
+﻿using CollectionMarket_API.Data;
+using CollectionMarket_API.DTOs;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -19,5 +20,7 @@ namespace CollectionMarket_API.Contracts
         Task<bool> Deposit(CashFlowDTO cashFlow, string name);
         Task<bool> Withdraw(CashFlowDTO cashFlow, string name);
         Task<decimal> GetMoney(string name);
+        bool HasEnoughMoney(User buyer, decimal price);
+        Task<bool> SendMoney(Order order);
     }
 }

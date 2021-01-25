@@ -19,13 +19,19 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<IList<SaleOffer>> GetAll()
         {
-            var SaleOffers = await _context.SaleOffers.ToListAsync();
+            var SaleOffers = await _context.SaleOffers
+                .Where(x => x.Order == null)
+                .Include(x => x.Seller)
+                .Include(x => x.ProductType)
+                .ToListAsync();
             return SaleOffers;
         }
 
         public async Task<SaleOffer> GetById(int id)
         {
-            var attribute = await _context.SaleOffers.FindAsync(id);
+            var attribute = await _context.SaleOffers
+                .Include(x => x.Seller)
+                .FirstOrDefaultAsync(x => x.Id == id);
             return attribute;
         }
 
@@ -61,7 +67,9 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<IList<SaleOffer>> GetFiltered(SaleOfferFilters filters)
         {
-            var query = _context.SaleOffers.AsQueryable();
+            var query = _context.SaleOffers
+                .Where(x => x.Order == null)
+                .AsQueryable();
             if (filters != null)
             {
                 if (filters.ProductTypeId != null)

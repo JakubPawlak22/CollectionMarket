@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CollectionMarket_API.DTOs
+namespace CollectionMarket_UI.Models
 {
-    public class EvaluationDTO
+    public class EvaluationModel
     {
         [Required]
         public string EvaluationDescription { get; set; }

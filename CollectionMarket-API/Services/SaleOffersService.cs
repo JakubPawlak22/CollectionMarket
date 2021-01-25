@@ -16,16 +16,19 @@ namespace CollectionMarket_API.Services
     public class SaleOffersService : ISaleOffersService
     {
         private readonly ISaleOffersRepository _saleOffersRepository;
+        private readonly IOrderService _orderService;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public SaleOffersService(ISaleOffersRepository saleOffersRepository,
+            IOrderService orderService,
             UserManager<User> userManager,
             IMapper mapper)
         {
             _mapper = mapper;
             _saleOffersRepository = saleOffersRepository;
             _userManager = userManager;
+            _orderService = orderService;
         }
 
         public async Task<CreateObjectResult> Create(SaleOfferCreateDTO saleOfferDTO, string userName)

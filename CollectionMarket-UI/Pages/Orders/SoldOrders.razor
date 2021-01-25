@@ -1,0 +1,60 @@
+﻿@page "/orders/soldorders"
+@inject IOrderRepository _orderRepo;
+
+
+<h3>Orders</h3>
+
+@if (!isAnyOrder)
+{
+    <LoadingMessage Message="There is no Orders." />
+}
+else if (Model == null)
+{
+    <LoadingMessage Message="Loading Orders informations." />
+}
+else
+{
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th>Buyer</th>
+                <th>Total Price</th>
+                <th>Order State</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.OrderBy(x => x.OrderState))
+            {
+                <tr>
+                    <td>
+                        <p><a href=@($"users/{order.BuyerUsername}")>@order.BuyerUsername</a></p>
+                    </td>
+                    <td>
+                        @order.TotalPrice
+                    </td>
+                    <td>
+                        @order.OrderState
+                    </td>
+                    <td>
+                        <DetailsButton Href=@(string.Format("/orders/sellerdetails/{0}",order.Id)) />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<OrderModel> Model;
+    private bool isAnyOrder = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Model = await _orderRepo.GetLoggedUserSoldOrders(Endpoints.SoldOrdersEndpoint);
+            isAnyOrder = (Model != null && Model.Count > 0);
+            this.StateHasChanged();
+        }
+    }
+}

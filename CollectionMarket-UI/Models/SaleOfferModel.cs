@@ -14,6 +14,8 @@ namespace CollectionMarket_UI.Models
         public decimal PricePerItem { get; set; }
         public Condition Condition { get; set; }
         public string Description { get; set; }
+        public int ProductTypeId { get; set; }
+        public string ProductTypeName { get; set; }
     }
     public class SaleOfferCreateModel
     {

@@ -1,0 +1,23 @@
+﻿@inject IUserRepository _userRepo;
+
+<AuthorizeView>
+    Money: @(AmountOfMoney.HasValue ? AmountOfMoney.ToString() : "??,??")€
+</AuthorizeView>
+
+@code
+{
+    private decimal? AmountOfMoney;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        AmountOfMoney = await _userRepo.GetMoney(Endpoints.MoneyEndpoint);
+        if (firstRender)
+        {
+            this.StateHasChanged();
+        }
+    }
+
+    public void Refresh()
+    {
+        this.StateHasChanged();
+    }
+}

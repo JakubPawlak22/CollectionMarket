@@ -47,7 +47,7 @@ else
                             }
                             else
                             {
-                                <a @onclick="HandleAddToCart" class="btn btn-primary">
+                                <a @onclick="(()=>HandleAddToCart(offer.Id))" class="btn btn-primary">
                                     <span class="oi oi-plus">Add To Cart</span>
                                 </a>
                             }
@@ -70,18 +70,31 @@ else
     {
         if (firstRender)
         {
-            SaleOfferFilters filters = new SaleOfferFilters
-            {
-                ProductTypeId = ProductTypeId,
-                SellerUsername = SellerUsername
-            };
-            Model = await _saleOfferRepository.Get(Endpoints.SaleOffersEndpoint, filters);
-            this.StateHasChanged();
+            await Refresh();
         }
     }
 
-    private async Task HandleAddToCart()
+    private async Task HandleAddToCart(int offerId)
     {
+        var isSuccess = await _saleOfferRepository.AddToCart(Endpoints.AddToCartEndpoint, offerId);
+        if (isSuccess)
+            await Refresh();
+    }
 
+    private async Task Refresh()
+    {
+        await LoadModel();
+        this.StateHasChanged();
+    }
+
+    private async Task LoadModel()
+    {
+        SaleOfferFilters filters = new SaleOfferFilters
+        {
+            ProductTypeId = ProductTypeId,
+            SellerUsername = SellerUsername
+        };
+        Model = await _saleOfferRepository.Get(Endpoints.SaleOffersEndpoint, filters);
+        this.StateHasChanged();
     }
 }

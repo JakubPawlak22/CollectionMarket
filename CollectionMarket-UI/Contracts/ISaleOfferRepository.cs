@@ -10,6 +10,8 @@ namespace CollectionMarket_UI.Contracts
     public interface ISaleOfferRepository
     {
         Task<bool> Create(string url, SaleOfferCreateModel model);
+        Task<bool> AddToCart(string url, int id);
+        Task<bool> RemoveFromCart(string url, int id);
         Task<bool> Delete(string url, int id);
         Task<SaleOfferModel> Get(string url, int id);
         Task<IList<SaleOfferModel>> Get(string url);

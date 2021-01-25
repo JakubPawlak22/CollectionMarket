@@ -20,6 +20,8 @@ namespace CollectionMarket_UI.Static
         public static string AttributesEndpoint = $"{BaseUrl}api/attributes/";
         public static string ProductTypesEndpoint = $"{BaseUrl}api/producttypes/";
         public static string SaleOffersEndpoint = $"{BaseUrl}api/saleoffers/";
+        public static string AddToCartEndpoint = $"{SaleOffersEndpoint}addtocart/";
+        public static string RemoveFromCartEndpoint = $"{SaleOffersEndpoint}removefromcart/";
         public static string OrdersEndpoint = $"{BaseUrl}api/orders/";
         public static string MakeOrderEndpoint = $"{OrdersEndpoint}makeorder/";
         public static string CartEndpoint = $"{OrdersEndpoint}cart/";
@@ -27,5 +29,7 @@ namespace CollectionMarket_UI.Static
         public static string LostEndpoint = $"{OrdersEndpoint}lost/";
         public static string DeliveredEndpoint = $"{OrdersEndpoint}delivered/";
         public static string EvaluationEndpoint = $"{OrdersEndpoint}evaluation/";
+        public static string SoldOrdersEndpoint = $"{OrdersEndpoint}soldorders/";
+        public static string BoughtOrdersEndpoint = $"{OrdersEndpoint}boughtorders/";
     }
 }

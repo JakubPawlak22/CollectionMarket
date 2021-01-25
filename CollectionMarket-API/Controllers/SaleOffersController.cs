@@ -17,13 +17,16 @@ namespace CollectionMarket_API.Controllers
     public class SaleOffersController : ControllerBase
     {
         private readonly ISaleOffersService _saleOffersService;
+        private readonly IOrderService _orderService;
         private readonly ILoggerService _logger;
 
         public SaleOffersController(ISaleOffersService saleOffersService,
+            IOrderService orderService,
             ILoggerService logger)
         {
             _saleOffersService = saleOffersService;
             _logger = logger;
+            _orderService = orderService;
         }
 
         /// <summary>
@@ -124,7 +127,7 @@ namespace CollectionMarket_API.Controllers
         {
             try
             {
-                if (! await IsOfferOwner(offer.Id))
+                if (!await IsOfferOwner(offer.Id))
                     return BadRequest();
                 if (offer == null || id < 1 || id != offer.Id)
                     return BadRequest();
@@ -175,9 +178,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("RemoveFromCart")]
+        [Route("removefromcart/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -190,8 +193,13 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await _saleOffersService.Exists(id))
                     return NotFound();
-                if (!await IsOfferOwner(id))
+                if (await IsOfferOwner(id))
                     return BadRequest();
+                var username = RetrieveLoggedUserName();
+                var isSuccess = await _orderService.RemoveFromCart(id, username);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
             }
             catch (Exception e)
             {
@@ -200,9 +208,9 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Authorize]
-        [Route("AddToCart")]
+        [Route("addtocart/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -215,8 +223,13 @@ namespace CollectionMarket_API.Controllers
                     return BadRequest();
                 if (!await _saleOffersService.Exists(id))
                     return NotFound();
-                if (!await IsOfferOwner(id))
+                if (await IsOfferOwner(id))
                     return BadRequest();
+                var username = RetrieveLoggedUserName();
+                var isSuccess = await _orderService.AddToCart(id, username);
+                if (!isSuccess)
+                    return StatusCode(500);
+                return StatusCode(204);
             }
             catch (Exception e)
             {

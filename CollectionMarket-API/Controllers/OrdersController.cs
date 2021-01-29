@@ -26,6 +26,10 @@ namespace CollectionMarket_API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Get logged user's sold Orders
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("soldorders")]
         [Authorize]
@@ -46,6 +50,10 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get logged user's bought Orders
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("boughtorders")]
         [Authorize]
@@ -66,6 +74,10 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Orders from logged User's cart
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("cart")]
         [Authorize]
@@ -86,6 +98,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// If logged User is buyer or seller of the Order, get Order by Id.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -112,6 +129,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Change Order state to Ordered and set Order's address information. Works only if logged User is Order's buyer.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("makeorder/{id}")]
@@ -140,6 +162,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Change Order state to Sent. Works only if logged User is Order's seller.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("sent/{id}")]
@@ -167,7 +194,11 @@ namespace CollectionMarket_API.Controllers
                 return StatusCode(500);
             }
         }
-
+        /// <summary>
+        /// Change Order state to Lost. Works only if logged User is Order's buyer.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("lost/{id}")]
@@ -196,6 +227,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Change Order state to Delivered. Works only if logged User is Order's buyer.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("delivered/{id}")]
@@ -224,6 +260,12 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add Evalustion to Delivered Order. Works only if logged User is Order's buyer.
+        /// </summary>
+        /// <param name="id">Order's Id</param>
+        /// <param name="evaluation">Evaluation</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("evaluation/{id}")]

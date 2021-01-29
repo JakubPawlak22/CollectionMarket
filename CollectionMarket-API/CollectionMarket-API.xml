@@ -104,6 +104,67 @@
             <param name="createDTO"></param>
             <returns>A Message's ID</returns>
         </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.GetLoggedUserSoldOrders">
+            <summary>
+            Get logged user's sold Orders
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.GetLoggedUserBoughtOrders">
+            <summary>
+            Get logged user's bought Orders
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.GetLoggedUserCart">
+            <summary>
+            Get Orders from logged User's cart
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.Get(System.Int32)">
+            <summary>
+            If logged User is buyer or seller of the Order, get Order by Id.
+            </summary>
+            <param name="id">Order's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.MakeOrder(System.Int32)">
+            <summary>
+            Change Order state to Ordered and set Order's address information. Works only if logged User is Order's buyer.
+            </summary>
+            <param name="id">Order's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.SetAsSent(System.Int32)">
+            <summary>
+            Change Order state to Sent. Works only if logged User is Order's seller.
+            </summary>
+            <param name="id">Order's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.SetAsLost(System.Int32)">
+            <summary>
+            Change Order state to Lost. Works only if logged User is Order's buyer.
+            </summary>
+            <param name="id">Order's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.SetAsDelivered(System.Int32)">
+            <summary>
+            Change Order state to Delivered. Works only if logged User is Order's buyer.
+            </summary>
+            <param name="id">Order's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.OrdersController.AddEvaluation(System.Int32,CollectionMarket_API.DTOs.EvaluationDTO)">
+            <summary>
+            Add Evalustion to Delivered Order. Works only if logged User is Order's buyer.
+            </summary>
+            <param name="id">Order's Id</param>
+            <param name="evaluation">Evaluation</param>
+            <returns></returns>
+        </member>
         <member name="M:CollectionMarket_API.Controllers.ProductTypesController.GetProductTypes(CollectionMarket_API.Filters.ProductTypeFilters)">
             <summary>
             Get all Product Types
@@ -173,6 +234,20 @@
             Removes SaleOffer by id
             </summary>
             <param name="id">SaleOffer's ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.RemoveFromCart(System.Int32)">
+            <summary>
+            Remove Sale Offer from logged user cart.
+            </summary>
+            <param name="id">Sale Offer's Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CollectionMarket_API.Controllers.SaleOffersController.AddToCart(System.Int32)">
+            <summary>
+            Add Sale Offer to logged user cart
+            </summary>
+            <param name="id">Sale Offer's Id</param>
             <returns></returns>
         </member>
         <member name="M:CollectionMarket_API.Controllers.UsersController.Login(CollectionMarket_API.DTOs.UserLoginDTO)">

@@ -178,6 +178,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove Sale Offer from logged user cart.
+        /// </summary>
+        /// <param name="id">Sale Offer's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("removefromcart/{id}")]
@@ -208,6 +213,11 @@ namespace CollectionMarket_API.Controllers
             }
         }
 
+        /// <summary>
+        /// Add Sale Offer to logged user cart
+        /// </summary>
+        /// <param name="id">Sale Offer's Id</param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("addtocart/{id}")]

@@ -32,9 +32,21 @@ namespace CollectionMarket_API.Services.ModelFactories
                 OrderState = (OrderState)order.OrderState,
                 Address = order.Address,
                 City = order.City,
-                Postcode = order.PostCode
+                Postcode = order.PostCode,
+                Evaluation = CreateEvaluationModel(order)
             };
             return dto;
+        }
+
+        private EvaluationDTO CreateEvaluationModel(Order order)
+        {
+            if (order.Evaluation != null)
+                return new EvaluationDTO
+                {
+                    Evaluation = order.Evaluation.Value,
+                    EvaluationDescription = order.EvaluationDescription
+                };
+            else return null;
         }
 
         private decimal CalculateProductsPrice(IList<SaleOffer> saleOffers)

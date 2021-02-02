@@ -1,0 +1,44 @@
+﻿@inject IOrderRepository _orderRepo;
+@inject NavigationManager _naviManager;
+<div class="card">
+    <h3 class="card-title">Add Evaluation</h3>
+
+    @if (!isSuccess)
+    {
+        <ErrorMessage Message="Something went wrong." />
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleAddEvaluation">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="evaluation">Evaluation</label>
+                <InputNumber Id="evaluation" class="form-control" @bind-Value="Model.Evaluation" />
+                <ValidationMessage For="@(() => Model.Evaluation)" />
+            </div>
+            <div class="form-group">
+                <label for="evaluation-description">Evaluation Description</label>
+                <InputText Id="evaluation-description" class="form-control" @bind-Value="Model.EvaluationDescription" />
+                <ValidationMessage For="@(() => Model.EvaluationDescription)" />
+            </div>
+            <SubmitButton />
+        </EditForm>
+    </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int OrderId { get; set; }
+    public EvaluationModel Model = new EvaluationModel();
+    bool isSuccess = true;
+
+    private async Task HandleAddEvaluation()
+    {
+        isSuccess = await _orderRepo.AddEvaluation(Endpoints.EvaluationEndpoint, OrderId, Model);
+        if (isSuccess)
+        {
+            _naviManager.NavigateTo($"/orders/buyerdetails/{OrderId}");
+        }
+    }
+}

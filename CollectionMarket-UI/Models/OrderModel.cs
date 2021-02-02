@@ -19,5 +19,6 @@ namespace CollectionMarket_UI.Models
         public string Address { get; set; }
         public OrderState OrderState { get; set; }
         public IList<SaleOfferModel> SaleOffers { get; set; }
+        public EvaluationModel Evaluation { get; set; }
     }
 }

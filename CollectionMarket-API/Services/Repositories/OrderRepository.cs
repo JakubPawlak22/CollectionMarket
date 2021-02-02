@@ -124,6 +124,7 @@ namespace CollectionMarket_API.Services.Repositories
                     && x.SaleOffers.Any()
                     && x.SaleOffers.FirstOrDefault().Seller == seller
                     && x.Buyer == buyer)
+                .Include(x => x.SaleOffers)
                 .FirstOrDefaultAsync();
         }
     }

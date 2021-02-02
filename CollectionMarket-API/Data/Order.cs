@@ -16,7 +16,7 @@ namespace CollectionMarket_API.Data
         public string Address { get; set; }
         public decimal Price { get; set; }
         public int OrderState { get; set; }
-        public int Evaluation { get; set; }
+        public int? Evaluation { get; set; }
         public string EvaluationDescription { get; set; }
 
         [ForeignKey("BuyerId")]

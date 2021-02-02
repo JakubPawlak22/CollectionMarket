@@ -106,26 +106,26 @@
                     <tbody>
                         @foreach (var offer in Model.SaleOffers)
                         {
-                        <tr>
-                            <td>
-                                <p><a href=@($"producttypes/{offer.ProductTypeId}")>@offer.ProductTypeName</a></p>
-                            </td>
-                            <td>
-                                @offer.Condition
-                            </td>
-                            <td>
-                                @offer.Description
-                            </td>
-                            <td>
-                                @offer.Count
-                            </td>
-                            <td>
-                                @offer.PricePerItem
-                            </td>
-                            <td>
-                                @offer.PricePerItem*@offer.Count
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <p><a href=@($"producttypes/{offer.ProductTypeId}")>@offer.ProductTypeName</a></p>
+                                </td>
+                                <td>
+                                    @offer.Condition
+                                </td>
+                                <td>
+                                    @offer.Description
+                                </td>
+                                <td>
+                                    @offer.Count
+                                </td>
+                                <td>
+                                    @offer.PricePerItem
+                                </td>
+                                <td>
+                                    @(offer.PricePerItem*offer.Count)
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -149,6 +149,36 @@
                     <a @onclick="HandleSetAsDelivered" class="btn btn-primary">
                         <span class="oi oi-plus">Set As Delivered</span>
                     </a>
+                }
+                @if (Model.OrderState == OrderState.Delivered)
+                {
+                    <h4>Evaluation</h4>
+                    if (Model.Evaluation == null)
+                    {
+                        <CreateEvaluation OrderId="Model.Id" />
+                    }
+                    else
+                    {
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Evaluation
+                                    </td>
+                                    <td>
+                                        @(Model.Evaluation.Evaluation)/5
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Evaluation Description
+                                    </td>
+                                    <td>
+                                        @Model.Evaluation.EvaluationDescription
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
                 }
             </div>
         </div>

@@ -19,5 +19,6 @@ namespace CollectionMarket_API.DTOs
         public string Address { get; set; }
         public OrderState OrderState { get; set; }
         public virtual IList<SaleOfferDTO> SaleOffers { get; set; }
+        public EvaluationDTO Evaluation { get; set; }
     }
 }

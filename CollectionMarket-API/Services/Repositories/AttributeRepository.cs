@@ -55,7 +55,7 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<bool> Exists(int id)
         {
-            var attribute = await _context.Attributes.FindAsync(id);
+            var attribute = await _context.Attributes.Where(x=>x.Id==id).SingleOrDefaultAsync();
             return attribute != null;
         }
 

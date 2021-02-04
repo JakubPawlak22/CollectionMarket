@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CollectionMarket-UI", "CollectionMarket-UI\CollectionMarket-UI.csproj", "{F82E0BDE-8A33-454B-B12B-1349BCA19875}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnitTests-API", "NUnitTests-API\NUnitTests-API.csproj", "{71D8216E-AF84-44BB-8DD1-3CA929BAA633}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests-API", "NUnitTests-API\UnitTests-API.csproj", "{71D8216E-AF84-44BB-8DD1-3CA929BAA633}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests-API", "IntegrationTests-API\IntegrationTests-API.csproj", "{DD8B9F6D-F289-46B6-A86A-9875B1D56346}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{71D8216E-AF84-44BB-8DD1-3CA929BAA633}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71D8216E-AF84-44BB-8DD1-3CA929BAA633}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71D8216E-AF84-44BB-8DD1-3CA929BAA633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8B9F6D-F289-46B6-A86A-9875B1D56346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8B9F6D-F289-46B6-A86A-9875B1D56346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8B9F6D-F289-46B6-A86A-9875B1D56346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8B9F6D-F289-46B6-A86A-9875B1D56346}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

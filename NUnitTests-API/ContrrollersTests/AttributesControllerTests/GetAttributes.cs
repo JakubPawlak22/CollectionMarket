@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NUnitTests_API.ContrrollersTests.AttributeControllerTests
+namespace NUnitTests_API.ContrrollersTests.AttributesControllerTests
 {
     [TestFixture]
     public class GetAttributes

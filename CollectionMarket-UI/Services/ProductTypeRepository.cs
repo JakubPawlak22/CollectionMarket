@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
-using CollectionMarket_API.Filters;
 using CollectionMarket_UI.Contracts;
+using CollectionMarket_UI.Filters;
 using CollectionMarket_UI.Models;
 using Newtonsoft.Json;
 using System;

@@ -1,1 +1,109 @@
 ﻿@page "/"
+@inject IProductTypeRepository _productsRepo;
+@inject ICategoryRepository _categoryRepo;
+
+<h3>Products</h3>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="Filters" OnValidSubmit="HandleSearch">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="name">Name</label>
+                <InputText Id="name" class="form-control" @bind-Value="Filters.Name" />
+                <ValidationMessage For="@(() => Filters.Name)" />
+            </div>
+            <div class="form-group">
+                <label for="categoryId">Category</label>
+                <select class="form-control" id="category" @bind="Filters.CategoryId">
+                    <option value="">-- Select Category --</option>
+                    @if (Categories != null)
+                    {
+                        foreach (var cat in Categories)
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    }
+                </select>
+                <ValidationMessage For="@(() => Filters.CategoryId)" />
+            </div>
+            <SubmitButton Text="Search" />
+        </EditForm>
+
+        @if (!isAnyProduct)
+        {
+            <LoadingMessage Message="There is no Product." />
+        }
+        else if (Model == null)
+        {
+            <LoadingMessage Message="Loading Products informations." />
+        }
+        else
+        {
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var productModel in Model)
+                    {
+                        <tr>
+                            <td>
+                                @productModel.Name
+                            </td>
+                            <td>
+                                <p><a href=@($"categories/{productModel.CategoryId}")>@productModel.CategoryName</a></p>
+                            </td>
+                            <td>
+                                <DetailsButton Href=@(string.Format("/producttypes/{0}", productModel.Id)) />
+                                <AuthorizeView Roles="Administrator">
+                                    <EditButton Href=@(string.Format("/producttypes/edit/{0}", productModel.Id)) />
+                                    <DeleteButton Href=@(string.Format("/producttypes/delete/{0}", productModel.Id)) />
+                                </AuthorizeView>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private ProductTypeFilters Filters = new ProductTypeFilters();
+    private IList<ProductTypeModel> Model;
+    private IList<CategoryModel> Categories;
+    private bool isAnyProduct = true;
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadModel();
+            this.StateHasChanged();
+        }
+    }
+
+
+    private async Task Refresh()
+    {
+        await LoadModel();
+        this.StateHasChanged();
+    }
+
+    private async Task LoadModel()
+    {
+        Model = await _productsRepo.Get(Endpoints.ProductTypesEndpoint, Filters);
+        Categories = await _categoryRepo.Get(Endpoints.CategoriesEndpoint);
+        isAnyProduct = (Model != null && Model.Count > 0);
+    }
+
+    private async Task HandleSearch()
+    {
+        await Refresh();
+    }
+}

@@ -28,10 +28,24 @@ namespace CollectionMarket_API.Services.Repositories
 
         public async Task<IList<ProductType>> GetFiltered(ProductTypeFilters filters)
         {
-            var query = _context.ProductTypes.AsQueryable()
+            var query = _context.ProductTypes
                 .Include(x => x.Category)
                 .Include(x => x.AttributeValues)
-                .ThenInclude(val => val.Attribute);
+                .ThenInclude(val => val.Attribute)
+                .AsQueryable();
+
+            if(filters!=null)
+            {
+                if (filters.CategoryId!=null)
+                {
+                    query = query.Where(x => x.CategoryId == filters.CategoryId);
+                }
+                if (!string.IsNullOrEmpty(filters.Name))
+                {
+                    query = query.Where(x => x.Name.Contains(filters.Name));
+                }
+            }
+
             var products = await query
                 .ToListAsync();
             return products;

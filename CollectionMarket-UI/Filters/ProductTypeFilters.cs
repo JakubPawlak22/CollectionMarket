@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CollectionMarket_API.Filters
+namespace CollectionMarket_UI.Filters
 {
     public class ProductTypeFilters
     {

@@ -7,5 +7,7 @@ namespace CollectionMarket_API.Filters
 {
     public class ProductTypeFilters
     {
+        public string Name { get; set; }
+        public int? CategoryId { get; set; }
     }
 }

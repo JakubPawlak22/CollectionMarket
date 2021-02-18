@@ -1,4 +1,4 @@
-﻿using CollectionMarket_API.Filters;
+﻿using CollectionMarket_UI.Filters;
 using CollectionMarket_UI.Models;
 using System;
 using System.Collections.Generic;
